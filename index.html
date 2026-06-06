@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Mit's Galaxy RPG: The God Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel+Decorative:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --space-bg: #020203;
+        --neon-accent: #00e5ff;
+        --blood-red: #ff003c;
+        --enrage-red: #5a0000;
+        --slash-color: #e0f7fa;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--space-bg);
+        color: #f3f4f6;
+        overflow: hidden;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      .font-rpg {
+        font-family: "Orbitron", sans-serif;
+      }
+      .font-love {
+        font-family: "Dancing Script", cursive;
+      }
+      .font-mythic {
+        font-family: "Cinzel Decorative", serif;
+      }
+
+      /* APOCALYPTIC ENVIRONMENT */
+      .galaxy-bg {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at center,
+          #110005 0%,
+          #000000 100%
+        );
+        z-index: -3;
+        overflow: hidden;
+      }
+      .blood-mist {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at 50% 50%,
+          rgba(255, 0, 60, 0.12) 0%,
+          transparent 60%
+        );
+        animation: heartbeatBG 3s ease-in-out infinite;
+        z-index: -2;
+      }
+
+      /* ĐÃ FIX BUG CÚ PHÁP: 15% thay vì 15 */
+      @keyframes heartbeatBG {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.5;
+          filter: brightness(1);
+        }
+        15% {
+          transform: scale(1.08);
+          opacity: 0.7;
+          filter: brightness(1.1);
+        }
+        30% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        45% {
+          transform: scale(1.12);
+          opacity: 0.9;
+          filter: brightness(1.3);
+        }
+      }
+
+      .vignette {
+        position: absolute;
+        inset: 0;
+        box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.95);
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      /* CAMERA SHAKE */
+      .screen-shake {
+        animation: godShake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      }
+      @keyframes godShake {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) rotate(0deg);
+        }
+        10%,
+        50%,
+        90% {
+          transform: translate3d(-8px, 10px, 0) rotate(-0.5deg);
+        }
+        30%,
+        70% {
+          transform: translate3d(10px, -10px, 0) rotate(0.5deg);
+        }
+      }
+
+      /* HIỆU ỨNG GLOW KHÔNG GÂY CHÓI */
+      .flashbang {
+        animation: premiumGlow 0.4s ease-out forwards;
+      }
+      @keyframes premiumGlow {
+        0% {
+          background: rgba(0, 229, 255, 0.2);
+          filter: blur(8px);
+        }
+        100% {
+          background: transparent;
+          filter: blur(0);
+        }
+      }
+
+      /* HORRIFYING BOSS ENTITY */
+      #boss-container {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+        z-index: 20;
+      }
+
+      .boss-entity {
+        width: 160px;
+        height: 160px;
+        background: #050505;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        animation:
+          horrifyingMorph 2.5s linear infinite,
+          float 2s ease-in-out infinite;
+      }
+      .boss-entity::before {
+        content: "";
+        position: absolute;
+        inset: -20px;
+        background: inherit;
+        border-radius: inherit;
+        filter: blur(25px);
+        opacity: 0.8;
+        z-index: -1;
+      }
+
+      .boss-cyan {
+        box-shadow:
+          0 0 100px rgba(6, 182, 212, 0.7),
+          inset 0 0 60px #06b6d4;
+        border: 2px solid #06b6d4;
+      }
+      .boss-rose {
+        box-shadow:
+          0 0 100px rgba(225, 29, 72, 0.7),
+          inset 0 0 60px #e11d48;
+        border: 2px solid #e11d48;
+      }
+      .boss-purple {
+        box-shadow:
+          0 0 100px rgba(147, 51, 234, 0.7),
+          inset 0 0 60px #9333ea;
+        border: 2px solid #9333ea;
+      }
+      .boss-amber {
+        box-shadow:
+          0 0 100px rgba(217, 119, 6, 0.7),
+          inset 0 0 60px #d97706;
+        border: 2px solid #d97706;
+      }
+
+      .enraged {
+        animation:
+          horrifyingMorph 0.4s linear infinite,
+          insaneJitter 0.15s infinite !important;
+        box-shadow:
+          0 0 180px var(--blood-red),
+          inset 0 0 100px #000 !important;
+        border: 3px dashed #ff0000 !important;
+        background: #150000 !important;
+      }
+
+      @keyframes horrifyingMorph {
+        0%,
+        100% {
+          border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+        25% {
+          border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+        }
+        50% {
+          border-radius: 40% 60% 80% 20% / 20% 80% 60% 40%;
+          transform: scale(1.12);
+        }
+        75% {
+          border-radius: 80% 20% 40% 60% / 60% 40% 20% 80%;
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+      @keyframes insaneJitter {
+        0% {
+          transform: translate(2px, 2px) rotate(0.5deg);
+        }
+        25% {
+          transform: translate(-2px, -2px) rotate(-0.5deg);
+        }
+        50% {
+          transform: translate(3px, -3px) scale(1.05);
+        }
+        75% {
+          transform: translate(-3px, 2px) rotate(0.5deg);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+
+      /* CHAOTIC EYES */
+      .horror-eyes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 20px;
+      }
+      .void-eye {
+        width: 18px;
+        height: 18px;
+        background: #000;
+        border: 2px solid var(--blood-red);
+        border-radius: 50%;
+        box-shadow:
+          0 0 20px var(--blood-red),
+          inset 0 0 8px var(--blood-red);
+        position: relative;
+        animation: paranoidLook 2.5s infinite;
+      }
+      .void-eye::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2px;
+        height: 12px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #fff;
+      }
+      @keyframes paranoidLook {
+        0%,
+        100% {
+          transform: scale(1) translate(0, 0);
+        }
+        10% {
+          transform: scale(1.2) translate(3px, -3px);
+        }
+        20% {
+          transform: scale(0.8) translate(-3px, 2px);
+        }
+        90% {
+          transform: scale(1) translate(0, 0);
+        }
+        95% {
+          transform: scale(0.1, 1.4);
+        }
+      }
+
+      .glitch-title {
+        text-shadow:
+          3px 3px 0px rgba(255, 0, 60, 0.6),
+          -3px -3px 0px rgba(0, 229, 255, 0.6);
+        animation: titleGlitch 0.25s infinite;
+      }
+      @keyframes titleGlitch {
+        0%,
+        100% {
+          transform: translate(0);
+        }
+        50% {
+          transform: translate(-1px, 1px);
+        }
+      }
+
+      /* NHÁT CHÉM THANH THOÁT, ẢO DIỆU MÀ KHÔNG ĐAU MẮT */
+      .slash-container {
+        position: absolute;
+        pointer-events: none;
+        z-index: 60;
+        transform: translate(-50%, -50%);
+        mix-blend-mode: plus-lighter;
+      }
+      .slash-line {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0px;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #fff 15%,
+          var(--neon-accent) 50%,
+          #fff 85%,
+          transparent
+        );
+        box-shadow:
+          0 0 30px var(--neon-accent),
+          0 0 10px #fff;
+        transform-origin: center;
+      }
+      .slash-1 {
+        animation: executeSlash 0.22s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+        transform: translate(-50%, -50%) rotate(35deg);
+      }
+      .slash-2 {
+        animation: executeSlash 0.18s cubic-bezier(0.1, 0.9, 0.2, 1) 0.04s
+          forwards;
+        transform: translate(-50%, -50%) rotate(-55deg);
+      }
+
+      .shockwave {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 2px solid rgba(0, 229, 255, 0.4);
+        box-shadow:
+          0 0 50px rgba(0, 229, 255, 0.2),
+          inset 0 0 30px rgba(0, 229, 255, 0.1);
+        animation: explodeWave 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .spark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 2px;
+        height: 18px;
+        background: linear-gradient(to top, transparent, #fff);
+        border-radius: 50%;
+        box-shadow: 0 0 12px var(--neon-accent);
+        pointer-events: none;
+        z-index: 65;
+        opacity: 0.8;
+        animation: sparkFly 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes executeSlash {
+        0% {
+          width: 0px;
+          opacity: 1;
+          filter: brightness(2);
+        }
+        60% {
+          width: 420px;
+          opacity: 1;
+        }
+        100% {
+          width: 480px;
+          opacity: 0;
+          filter: brightness(1);
+        }
+      }
+      @keyframes explodeWave {
+        0% {
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 0.9;
+          border-width: 6px;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(2.8);
+          opacity: 0;
+          border-width: 0px;
+        }
+      }
+      @keyframes sparkFly {
+        0% {
+          transform: translate(-50%, -50%) rotate(var(--rot)) translateY(0)
+            scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(var(--rot))
+            translateY(var(--dist)) scale(0);
+          opacity: 0;
+        }
+      }
+
+      /* DAMAGE NUMBERS */
+      .damage-popup {
+        position: absolute;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        font-size: 3rem;
+        color: #fff;
+        text-shadow:
+          0 0 20px var(--blood-red),
+          4px 4px 0 #000;
+        pointer-events: none;
+        animation: epicDamage 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        z-index: 70;
+      }
+      .damage-crit {
+        font-size: 5rem;
+        color: #ffbc00;
+        text-shadow:
+          0 0 40px #ff0000,
+          6px 6px 0 #000;
+        z-index: 75;
+      }
+      @keyframes epicDamage {
+        0% {
+          opacity: 1;
+          transform: translate(-50%, 0) scale(0.3);
+        }
+        25% {
+          transform: translate(-50%, -80px) scale(1.2);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -160px) scale(0.9);
+        }
+      }
+
+      /* CENTERED BOTTOM UI */
+      .central-hud {
+        position: absolute;
+        bottom: 40px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 32px;
+        z-index: 50;
+        pointer-events: none;
+      }
+
+      #hero-portrait {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        border: 3px solid var(--neon-accent);
+        box-shadow:
+          0 0 40px rgba(0, 229, 255, 0.6),
+          inset 0 0 30px rgba(0, 229, 255, 0.4);
+        background: #000;
+        position: relative;
+        z-index: 51;
+      }
+      #mit-hero-mover {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        transform: scale(1.15);
+        transition: all 0.1s ease-out;
+        filter: grayscale(5%) contrast(115%) brightness(105%);
+      }
+
+      /* CLONE CLASS CHO PHÂN THÂN CHÉM */
+      .hero-striking {
+        box-shadow:
+          0 0 80px #fff,
+          0 0 150px var(--neon-accent) !important;
+        border: 3px solid #fff !important;
+        filter: brightness(180%) !important;
+        z-index: 999;
+      }
+
+      #attack-btn {
+        width: 100px;
+        height: 100px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #ff003c 0%, #8a0000 100%);
+        border: 3px solid #ffbc00;
+        border-bottom-width: 10px;
+        box-shadow:
+          0 15px 40px rgba(255, 0, 60, 0.7),
+          inset 0 0 30px rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        pointer-events: auto;
+        cursor: pointer;
+        transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      #attack-btn:active {
+        transform: translateY(7px);
+        border-bottom-width: 3px;
+        box-shadow:
+          0 0 60px rgba(255, 0, 60, 0.9),
+          inset 0 0 40px rgba(0, 0, 0, 0.9);
+      }
+      #attack-btn span {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        font-size: 15px;
+        color: #fff;
+        text-shadow: 0 2px 4px #000;
+      }
+      .attack-icon {
+        font-size: 34px;
+        margin-bottom: -4px;
+        filter: drop-shadow(0 2px 4px #000);
+      }
+
+      /* MODALS */
+      .rpg-loot-container {
+        background: rgba(5, 5, 10, 0.95);
+        backdrop-filter: blur(40px);
+        border: 1px solid rgba(0, 229, 255, 0.4);
+        box-shadow:
+          0 30px 100px rgba(0, 0, 0, 1),
+          0 0 60px rgba(0, 229, 255, 0.15),
+          inset 0 0 50px rgba(255, 255, 255, 0.02);
+        border-radius: 20px;
+      }
+      .btn-mythic {
+        background: linear-gradient(135deg, #00e5ff 0%, #007bb5 100%);
+        box-shadow: 0 5px 40px rgba(0, 229, 255, 0.5);
+        border: 1px solid #fff;
+        color: #000;
+        transition: all 0.2s;
+      }
+      .btn-mythic:active {
+        transform: scale(0.95);
+        box-shadow: 0 0 60px #00e5ff;
+      }
+    </style>
+  </head>
+
+  <body
+    id="main-body"
+    class="w-screen h-[100dvh] flex flex-col relative select-none"
+  >
+    <audio
+      id="bg-music"
+      src="A Little Dream Of Me Original Soundtrack.mp3"
+      loop
+    ></audio>
+    <div
+      id="flash-overlay"
+      class="fixed inset-0 pointer-events-none z-[100]"
+    ></div>
+
+    <div class="galaxy-bg"><div class="blood-mist"></div></div>
+    <div class="vignette"></div>
+
+    <!-- HUD TOP -->
+    <div
+      class="w-full flex justify-between items-center p-6 z-10 bg-black/80 backdrop-blur-xl border-b border-cyan-500/30 shadow-[0_0_40px_rgba(0,229,255,0.2)]"
+    >
+      <div class="flex flex-col">
+        <span
+          class="text-[12px] text-cyan-400 font-rpg tracking-[0.3em] uppercase drop-shadow-md"
+          >Thực Thể Sống sót</span
+        >
+        <span
+          class="text-lg font-bold text-white font-rpg tracking-widest text-shadow-sm"
+          >MITXGAI - 100% HP</span
+        >
+      </div>
+      <div class="flex flex-col items-end">
+        <span
+          class="text-[12px] text-red-500 font-rpg tracking-[0.3em] uppercase drop-shadow-md"
+          >Vực Thẳm Phán Xét</span
+        >
+        <span
+          id="stage-counter"
+          class="text-lg font-black text-yellow-400 font-rpg drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]"
+          >STAGE 1/4</span
+        >
+      </div>
+    </div>
+
+    <!-- COMBAT ZONE -->
+    <div id="action-zone" class="flex-1 w-full relative overflow-hidden">
+      <!-- BOSS ENTITY -->
+      <div id="boss-container">
+        <div
+          class="absolute -top-24 left-1/2 transform -translate-x-1/2 w-72 text-center"
+        >
+          <div
+            id="boss-title"
+            class="font-rpg font-black text-xl tracking-widest uppercase mb-4 text-red-100 transition-all"
+          >
+            Thực Thể Logic
+          </div>
+          <div
+            class="w-full h-5 bg-neutral-950 border-2 border-white/30 rounded-full overflow-hidden shadow-[0_0_40px_rgba(255,0,0,0.8)] relative"
+          >
+            <div
+              id="boss-hp-bar"
+              class="h-full bg-gradient-to-r from-red-800 via-red-500 to-yellow-400 w-full transition-all duration-100"
+            ></div>
+          </div>
+        </div>
+        <div id="boss-entity" class="boss-entity boss-cyan">
+          <div class="horror-eyes" id="boss-eyes"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTRAL MOBA UI -->
+    <div class="central-hud">
+      <!-- PORTRAIT CENTERED -->
+      <div id="hero-portrait">
+        <img id="mit-hero-mover" src="IMG_2599.PNG" alt="Mit" />
+      </div>
+      <!-- ATTACK BTN RIGHT -->
+      <button id="attack-btn">
+        <div class="attack-icon">⚔️</div>
+        <span>CHÉM</span>
+      </button>
+    </div>
+
+    <!-- LOOT MODAL -->
+    <div
+      id="reward-modal"
+      class="hidden fixed inset-0 bg-black/95 z-[150] overflow-y-auto backdrop-blur-3xl"
+    >
+      <div class="flex min-h-full items-center justify-center p-4 py-12">
+        <div
+          class="w-full max-w-md rpg-loot-container p-10 transform scale-90 opacity-0 transition-all duration-500"
+          id="reward-content"
+        >
+          <div class="text-center mt-2 mb-8">
+            <span
+              class="text-sm font-rpg text-cyan-400 font-bold tracking-[0.4em] uppercase block mb-3 drop-shadow-[0_0_10px_rgba(0,229,255,0.7)]"
+              >BOSS BỊ TIÊU DIỆT</span
+            >
+            <h3
+              class="text-3xl font-black font-mythic text-yellow-400 drop-shadow-[0_0_25px_rgba(255,215,0,1)]"
+              id="loot-title"
+            ></h3>
+          </div>
+          <div
+            class="bg-black/90 border border-cyan-500/30 rounded-2xl p-8 text-center relative shadow-[inset_0_0_40px_rgba(0,229,255,0.1)]"
+          >
+            <p
+              id="loot-message"
+              class="font-love text-4xl leading-relaxed text-cyan-50 drop-shadow-lg"
+            ></p>
+          </div>
+          <button
+            id="claim-btn"
+            class="w-full mt-10 btn-mythic font-rpg font-black py-5 rounded-xl tracking-[0.2em] text-lg uppercase"
+          >
+            TIẾP TỤC SĂN LÙNG
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAND FINALE -->
+    <div
+      id="grand-finale-screen"
+      class="hidden fixed inset-0 bg-black/95 z-[150] overflow-y-auto backdrop-blur-3xl"
+    >
+      <div class="flex min-h-full items-center justify-center p-4 py-12">
+        <div
+          class="w-full max-w-lg rpg-loot-container p-12 transform scale-90 opacity-0 transition-all duration-1000 ease-out border-yellow-500/50 shadow-[0_0_150px_rgba(255,215,0,0.3)]"
+          id="final-artifact"
+        >
+          <div
+            class="flex flex-col items-center border-b border-yellow-500/40 pb-10 mt-2"
+          >
+            <div
+              class="w-40 h-40 rounded-full overflow-hidden border-[5px] border-yellow-400 mb-8 shadow-[0_0_100px_rgba(255,215,0,1)] bg-black relative"
+            >
+              <img
+                src="IMG_2608.PNG"
+                alt="Mit"
+                class="w-full h-full object-cover scale-110"
+              />
+              <div
+                class="absolute inset-0 shadow-[inset_0_0_40px_rgba(255,215,0,0.5)]"
+              ></div>
+            </div>
+            <h4
+              class="text-xl font-rpg text-yellow-400 font-black tracking-[0.5em] uppercase text-center drop-shadow-[0_0_20px_rgba(255,215,0,1)]"
+            >
+              [THẦN THOẠI BẬC SSS]<br /><span
+                class="text-white text-3xl mt-4 block text-shadow-lg"
+                >CHÚA TỂ PHÒNG THI</span
+              >
+            </h4>
+          </div>
+          <div
+            class="py-10 space-y-8 font-love text-[2rem] leading-relaxed text-justify text-amber-50"
+          >
+            <p
+              class="font-bold text-6xl text-yellow-400 font-mythic drop-shadow-[0_0_15px_rgba(255,215,0,0.9)]"
+            >
+              Gửi Mit ,
+            </p>
+            <p>
+              Ôn bài xong hết ròi giờ đến lúc thể hiện thoi, những đêm học bài
+              chăm chỉ đèn sách ròi cũng sẽ được đền đáp, hãy cứ tự tin bước vào
+              phòng thi và tỏa sáng như những vì sao trên bầu trời đêm nha. Tui
+              tin pà sẽ làm tốt, mấy cái môn nì không làm khó được pà đâu, cứ
+              bình tĩnh và thể hiện hết khả năng của mình nhá.
+            </p>
+          </div>
+          <div
+            class="text-right text-4xl font-love text-yellow-400 font-bold border-t border-yellow-500/40 pt-8 mt-4 drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]"
+          >
+            Bi chúc Mit thi tốt, nhai đề rộp rộp nhaaa ⚔️✨🔥👑
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const stagesData = [
+        {
+          name: "Thực Thể Logic",
+          hp: 5000,
+          maxHp: 5000,
+          color: "cyan",
+          eyes: 5,
+          lootTitle: "[Lõi Không Gian] Tinh Thể Logic",
+          lootMessage:
+            "Môn này thi đầu tiên nên tui để lên đầu nhaa, Chúc cho Mit bình tĩnh bản lĩnh chit môn này 1 cách dễ dàng nha. Bạch Nguyệt Quang sẽ mở lòng với pà thui. Thi tốt nhá! 🌌",
+        },
+        {
+          name: "Bóng Ma Pháp Luật",
+          hp: 6000,
+          maxHp: 6000,
+          color: "rose",
+          eyes: 7,
+          lootTitle: "[Thánh Tích] Cuộn Trán Phán Xét",
+          lootMessage:
+            "Môn này tui không biết bà khi nào thi nên để tạm ở dưới nhaa. Chúc cho Mit chia thừa kế ngon lành nhé ⚖️💫",
+        },
+        {
+          name: "Ác Mộng Tâm Lý",
+          hp: 8000,
+          maxHp: 8000,
+          color: "purple",
+          eyes: 10,
+          lootTitle: "[Mắt Thần] Thấu Kính Chân Lý",
+          lootMessage:
+            "Môn tâm lý này mà thi hong được là cô buồn lắm à nha. Đùa chứ tui tin pà làm được mờ, mấy cái Tâm Lý Học này Mit nhai cái một à he. Fighting!!! 👁️✨",
+        },
+        {
+          name: "Vực Thẳm Kinh Tế",
+          hp: 12000,
+          maxHp: 12000,
+          color: "amber",
+          eyes: 15,
+          lootTitle: "[Quyền Trượng] Hạch Tâm Kinh Tế",
+          lootMessage:
+            "Môn này là môn cuối cùng nên tui để lên cuối nhaa. Chúc cho Mit thi tốt môn này nha. Tính toán cho ngon lành nhá 💰🌟",
+        },
+      ];
+
+      let currentStageIdx = 0;
+      let bossMoveInterval;
+      let isBossDead = false;
+      let isEnraged = false;
+
+      const mainBody = document.getElementById("main-body");
+      const actionZone = document.getElementById("action-zone");
+      const bossContainer = document.getElementById("boss-container");
+      const bossEntity = document.getElementById("boss-entity");
+      const bossEyes = document.getElementById("boss-eyes");
+      const bossTitle = document.getElementById("boss-title");
+      const bossHpBar = document.getElementById("boss-hp-bar");
+      const stageCounter = document.getElementById("stage-counter");
+      const flashOverlay = document.getElementById("flash-overlay");
+
+      const heroPortrait = document.getElementById("hero-portrait");
+      const mitHeroMover = document.getElementById("mit-hero-mover");
+      const attackBtn = document.getElementById("attack-btn");
+
+      const rewardModal = document.getElementById("reward-modal");
+      const rewardContent = document.getElementById("reward-content");
+      const grandFinaleScreen = document.getElementById("grand-finale-screen");
+
+      // === HỆ THỐNG ÂM THANH ĐA TẦNG CAO CẤP ===
+      const AudioEngine = {
+        ctx: null,
+        init() {
+          if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          }
+          if (this.ctx.state === "suspended") {
+            this.ctx.resume();
+          }
+        },
+        playSlash() {
+          this.init();
+          const now = this.ctx.currentTime;
+
+          const oscWind = this.ctx.createOscillator();
+          const gainWind = this.ctx.createGain();
+          oscWind.type = "triangle";
+          oscWind.frequency.setValueAtTime(1400, now);
+          oscWind.frequency.exponentialRampToValueAtTime(150, now + 0.12);
+
+          gainWind.gain.setValueAtTime(0.25, now);
+          gainWind.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+          oscWind.connect(gainWind).connect(this.ctx.destination);
+
+          const oscCling = this.ctx.createOscillator();
+          const gainCling = this.ctx.createGain();
+          oscCling.type = "sine";
+          oscCling.frequency.setValueAtTime(3800, now);
+          oscCling.frequency.setValueAtTime(2200, now + 0.03);
+
+          gainCling.gain.setValueAtTime(0.12, now);
+          gainCling.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+          oscCling.connect(gainCling).connect(this.ctx.destination);
+
+          oscWind.start(now);
+          oscWind.stop(now + 0.12);
+          oscCling.start(now);
+          oscCling.stop(now + 0.06);
+        },
+        playDeath() {
+          this.init();
+          const now = this.ctx.currentTime;
+
+          const subOsc = this.ctx.createOscillator();
+          const subGain = this.ctx.createGain();
+          subOsc.type = "sine";
+          subOsc.frequency.setValueAtTime(110, now);
+          subOsc.frequency.linearRampToValueAtTime(25, now + 1.4);
+
+          subGain.gain.setValueAtTime(0.6, now);
+          subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+
+          subOsc.connect(subGain).connect(this.ctx.destination);
+          subOsc.start(now);
+          subOsc.stop(now + 1.4);
+
+          for (let i = 0; i < 4; i++) {
+            const delay = i * 0.12;
+            const chimeOsc = this.ctx.createOscillator();
+            const chimeGain = this.ctx.createGain();
+
+            chimeOsc.type = "sine";
+            chimeOsc.frequency.setValueAtTime(2200 - i * 400, now + delay);
+
+            chimeGain.gain.setValueAtTime(0.08, now + delay);
+            chimeGain.gain.exponentialRampToValueAtTime(
+              0.001,
+              now + delay + 0.25,
+            );
+
+            chimeOsc.connect(chimeGain).connect(this.ctx.destination);
+            chimeOsc.start(now + delay);
+            chimeOsc.stop(now + delay + 0.25);
+          }
+        },
+      };
+
+      function initStage() {
+        isBossDead = false;
+        isEnraged = false;
+        const currentBoss = stagesData[currentStageIdx];
+        bossTitle.textContent = currentBoss.name;
+        bossTitle.className =
+          "font-rpg font-black text-xl tracking-widest uppercase mb-4 glitch-title text-white";
+        stageCounter.textContent = `STAGE ${currentStageIdx + 1}/${stagesData.length}`;
+        bossEntity.className = `boss-entity boss-${currentBoss.color}`;
+
+        bossEyes.innerHTML = "";
+        for (let i = 0; i < currentBoss.eyes; i++) {
+          const eye = document.createElement("div");
+          eye.className = "void-eye";
+          eye.style.transform = `scale(${0.6 + Math.random() * 0.8})`;
+          bossEyes.appendChild(eye);
+        }
+
+        updateHpUI();
+        startBossMovement(1000 - currentStageIdx * 150);
+      }
+
+      function startBossMovement(speed) {
+        clearInterval(bossMoveInterval);
+        const containerRect = actionZone.getBoundingClientRect();
+
+        bossMoveInterval = setInterval(() => {
+          if (isBossDead) return;
+          // Fix logic để tránh lỗi NaN trên màn hình nhỏ
+          const maxX = Math.max(0, containerRect.width - 220);
+          const maxY = Math.max(0, containerRect.height - 380);
+
+          const randomX = Math.random() * maxX - maxX / 2;
+          const randomY = Math.random() * maxY - maxY / 2 - 60;
+          bossContainer.style.transform = `translate(calc(-50% + ${randomX}px), calc(-50% + ${randomY}px))`;
+        }, speed);
+      }
+
+      function updateHpUI() {
+        const currentBoss = stagesData[currentStageIdx];
+        const pct = Math.max(0, (currentBoss.hp / currentBoss.maxHp) * 100);
+        bossHpBar.style.width = `${pct}%`;
+
+        if (pct <= 40 && pct > 0 && !isEnraged) {
+          isEnraged = true;
+          bossEntity.classList.add("enraged");
+          bossTitle.classList.add(
+            "text-red-500",
+            "scale-110",
+            "drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]",
+          );
+          bossTitle.textContent = "☠️ " + currentBoss.name + " (TỬ CHIẾN)";
+          startBossMovement(280);
+        }
+      }
+
+      // === ĐÃ FIX LỖI KẸT HÌNH ẢNH: SỬ DỤNG HỆ THỐNG CLONE ===
+      function triggerGodSlash() {
+        if (isBossDead) return;
+        document
+          .getElementById("bg-music")
+          .play()
+          .catch(() => {});
+        AudioEngine.playSlash();
+
+        const currentBoss = stagesData[currentStageIdx];
+        const heroRect = heroPortrait.getBoundingClientRect();
+        const bossRect = bossEntity.getBoundingClientRect();
+
+        const startX = heroRect.left + heroRect.width / 2;
+        const startY = heroRect.top + heroRect.height / 2;
+        const targetX = bossRect.left + bossRect.width / 2;
+        const targetY = bossRect.top + bossRect.height / 2;
+
+        // Tạo Phân Thân (Clone) bay lên thay vì di chuyển bản gốc
+        const clone = document.createElement("img");
+        clone.src = mitHeroMover.src;
+        clone.className =
+          "fixed rounded-full object-cover z-[999] hero-striking";
+        clone.style.width = "110px";
+        clone.style.height = "110px";
+        clone.style.left = `${startX - 55}px`;
+        clone.style.top = `${startY - 55}px`;
+        clone.style.transition = "all 0.1s cubic-bezier(0.16, 1, 0.3, 1)";
+        document.body.appendChild(clone);
+
+        // Force reflow để CSS Transition chạy ngay lập tức
+        void clone.offsetWidth;
+
+        // Phi thân tới chém Boss
+        clone.style.left = `${targetX - 55}px`;
+        clone.style.top = `${targetY - 55}px`;
+
+        // Logic sát thương & hiệu ứng sau 110ms
+        setTimeout(() => {
+          // Kéo clone về vị trí cũ và biến mất
+          clone.style.left = `${startX - 55}px`;
+          clone.style.top = `${startY - 55}px`;
+          clone.style.opacity = "0";
+          setTimeout(() => clone.remove(), 100);
+
+          if (isBossDead) return; // Nếu Boss đã chết từ cú chém trước, hủy tính dame
+
+          const isCrit = Math.random() < 0.5;
+          const damage = isCrit
+            ? Math.floor(Math.random() * 800) + 1200
+            : Math.floor(Math.random() * 400) + 600;
+          currentBoss.hp = Math.max(0, currentBoss.hp - damage);
+          updateHpUI();
+
+          mainBody.classList.remove("screen-shake");
+          void mainBody.offsetWidth;
+          mainBody.classList.add("screen-shake");
+
+          if (isCrit) {
+            flashOverlay.classList.remove("flashbang");
+            void flashOverlay.offsetWidth;
+            flashOverlay.classList.add("flashbang");
+          }
+
+          // Hiệu ứng tia lửa
+          const slashFX = document.createElement("div");
+          slashFX.className = "slash-container";
+          slashFX.style.left = `${targetX}px`;
+          slashFX.style.top = `${targetY}px`;
+
+          let sparksHTML = "";
+          for (let i = 0; i < 6; i++) {
+            const rot = Math.random() * 360;
+            const dist = Math.random() * 120 + 40;
+            sparksHTML += `<div class="spark" style="--rot:${rot}deg; --dist:${dist}px;"></div>`;
+          }
+
+          slashFX.innerHTML = `
+            <div class="shockwave"></div>
+            <div class="slash-line slash-1"></div>
+            <div class="slash-line slash-2"></div>
+            ${sparksHTML}
+          `;
+          document.body.appendChild(slashFX);
+          setTimeout(() => slashFX.remove(), 450);
+
+          // Popup Dame
+          const popup = document.createElement("div");
+          popup.textContent = isCrit ? `CHÍ MẠNG -${damage}` : `-${damage}`;
+          popup.className = `damage-popup ${isCrit ? "damage-crit" : ""}`;
+          popup.style.left = `${targetX}px`;
+          popup.style.top = `${targetY - 60}px`;
+          document.body.appendChild(popup);
+          setTimeout(() => popup.remove(), 800);
+
+          // Xử lý Boss chết
+          if (currentBoss.hp <= 0) {
+            isBossDead = true;
+            clearInterval(bossMoveInterval);
+
+            AudioEngine.playDeath();
+
+            bossContainer.style.transform =
+              "translate(-50%, -50%) scale(0.1) rotate(1080deg)";
+            bossContainer.style.filter = "brightness(5) contrast(2) blur(15px)";
+
+            setTimeout(() => {
+              document.getElementById("loot-title").textContent =
+                currentBoss.lootTitle;
+              document.getElementById("loot-message").textContent =
+                currentBoss.lootMessage;
+              rewardModal.classList.remove("hidden");
+              setTimeout(
+                () => rewardContent.classList.remove("scale-90", "opacity-0"),
+                5,
+              );
+            }, 850);
+          }
+        }, 110);
+      }
+
+      document.getElementById("claim-btn").addEventListener("click", () => {
+        rewardContent.classList.add("scale-90", "opacity-0");
+        setTimeout(() => {
+          rewardModal.classList.add("hidden");
+          currentStageIdx++;
+          if (currentStageIdx < stagesData.length) {
+            bossContainer.style.transform =
+              "translate(-50%, -50%) scale(1) rotate(0deg)";
+            bossContainer.style.filter = "none";
+            initStage();
+          } else {
+            grandFinaleScreen.classList.remove("hidden");
+            grandFinaleScreen.style.display = "block";
+            setTimeout(() => {
+              document.getElementById("final-artifact").style.opacity = "1";
+              document.getElementById("final-artifact").style.transform =
+                "scale(1)";
+            }, 150);
+          }
+        }, 400);
+      });
+
+      attackBtn.addEventListener("pointerdown", triggerGodSlash);
+
+      initStage();
+    </script>
+  </body>
+</html>
