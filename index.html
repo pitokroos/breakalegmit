@@ -1,793 +1,1241 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Mit's Galaxy RPG: The God Mode</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css?family=Dancing+Script:wght@600;700&family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel+Decorative:wght@700;900&display=swap" rel="stylesheet" />
-  
-  <style>
-    :root {
-      --space-bg: #020203;
-      --neon-accent: #00e5ff;
-      --blood-red: #ff003c;
-      --enrage-red: #5a0000;
-      --slash-color: #e0f7fa;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Lets join the game before entering the final exam Mit.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Dancing+Script:wght@600;700&family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel+Decorative:wght@700;900&display=swap"
+      rel="stylesheet"
+    />
 
-    body {
-      font-family: "Plus Jakarta Sans", sans-serif;
-      background-color: var(--space-bg);
-      color: #f3f4f6;
-      overflow: hidden;
-      touch-action: manipulation;
-      user-select: none;
-      -webkit-user-select: none;
-      /* Desktop Environment Centering */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100dvh;
-      width: 100vw;
-    }
-
-    .font-rpg { font-family: "Orbitron", sans-serif; }
-    .font-love { font-family: "Dancing Script", cursive; }
-    .font-mythic { font-family: "Cinzel Decorative", serif; }
-
-    /* OUTER DESKTOP BACKGROUND */
-    .desktop-ambient {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, #110015 0%, #000000 100%);
-      z-index: -10;
-      display: none;
-    }
-    @media (min-width: 768px) {
-      .desktop-ambient { display: block; }
-    }
-
-    /* GAME CONSOLE (Handles Responsive Containment) */
-    #game-console {
-      position: relative;
-      width: 100%;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background-color: var(--space-bg);
-      box-shadow: 0 0 0 rgba(0,0,0,0);
-      transition: all 0.3s ease;
-    }
-
-    /* Desktop constraints */
-    @media (min-width: 768px) {
-      #game-console {
-        width: 420px;
-        height: 850px;
-        max-height: 92vh;
-        border-radius: 40px;
-        border: 1px solid rgba(0, 229, 255, 0.15);
-        box-shadow: 
-          0 25px 80px rgba(0,0,0,0.9),
-          0 0 40px rgba(0, 229, 255, 0.05),
-          inset 0 0 20px rgba(255,255,255,0.02);
+    <style>
+      :root {
+        --space-bg: #020203;
+        --neon-accent: #00e5ff;
+        --blood-red: #ff003c;
+        --ki-gold: #ffbc00;
+        --beam-core: #ffffff;
+        --beam-outer: #00e5ff;
       }
-    }
 
-    /* APOCALYPTIC ENVIRONMENT */
-    .galaxy-bg {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, #110005 0, #000000 100%);
-      z-index: -3;
-    }
-    .blood-mist {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 50% 50%, rgba(255, 0, 60, 0.12) 0%, transparent 60%);
-      animation: heartbeatBG 3s ease-in-out infinite;
-      z-index: -2;
-    }
-    @keyframes heartbeatBG {
-      0%, 100% { transform: scale(1); opacity: 0.5; filter: brightness(1); }
-      15% { transform: scale(1.08); opacity: 0.7; filter: brightness(1.1); }
-      30% { transform: scale(1); opacity: 0.5; }
-      45% { transform: scale(1.12); opacity: 0.9; filter: brightness(1.3); }
-    }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--space-bg);
+        color: #f3f4f6;
+        overflow: hidden;
+        touch-action: manipulation;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100dvh;
+        width: 100vw;
+      }
 
-    .vignette {
-      position: absolute;
-      inset: 0;
-      box-shadow: inset 0 0 150px rgba(0,0,0,0.95);
-      pointer-events: none;
-      z-index: 10;
-      border-radius: inherit;
-    }
+      /* Chỉ khóa bôi đen ở khu vực chơi game, cho phép bôi đen copy thư chúc mừng */
+      #game-play-area,
+      #start-screen {
+        user-select: none;
+        -webkit-user-select: none;
+      }
 
-    /* CAMERA SHAKE */
-    .screen-shake {
-      animation: godShake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-    }
-    @keyframes godShake {
-      0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-      10%, 50%, 90% { transform: translate3d(-6px, 8px, 0) rotate(-0.5deg); }
-      30%, 70% { transform: translate3d(8px, -8px, 0) rotate(0.5deg); }
-    }
+      .font-rpg {
+        font-family: "Orbitron", sans-serif;
+      }
+      .font-love {
+        font-family: "Dancing Script", cursive;
+      }
+      .font-mythic {
+        font-family: "Cinzel Decorative", serif;
+      }
 
-    /* FLASHBANG */
-    .flashbang { animation: premiumGlow 0.4s ease-out forwards; }
-    @keyframes premiumGlow {
-      0% { background: rgba(0, 229, 255, 0.2); filter: blur(8px); }
-      100% { background: transparent; filter: blur(0); }
-    }
+      .desktop-ambient {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at center, #110015 0%, #000000 100%);
+        z-index: -10;
+        display: none;
+      }
+      @media (min-width: 768px) {
+        .desktop-ambient {
+          display: block;
+        }
+      }
 
-    /* BOSS ENTITY */
-    #boss-container {
-      position: absolute;
-      top: 35%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
-      z-index: 20;
-    }
-    
-    .boss-entity {
-      width: 140px;
-      height: 140px;
-      background: #050505;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-      animation: horrifyingMorph 2.5s linear infinite, float 2s ease-in-out infinite;
-    }
-    .boss-entity::before {
-      content: "";
-      position: absolute;
-      inset: -15px;
-      background: inherit;
-      border-radius: inherit;
-      filter: blur(20px);
-      opacity: 0.8;
-      z-index: -1;
-    }
+      #game-console {
+        position: relative;
+        width: 100%;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: var(--space-bg);
+      }
+      @media (min-width: 768px) {
+        #game-console {
+          width: 420px;
+          height: 850px;
+          max-height: 92vh;
+          border-radius: 40px;
+          border: 1px solid rgba(0, 229, 255, 0.15);
+          box-shadow:
+            0 25px 80px rgba(0, 0, 0, 0.9),
+            0 0 40px rgba(0, 229, 255, 0.05);
+        }
+      }
 
-    .boss-cyan { box-shadow: 0 0 80px rgba(6, 182, 212, 0.7), inset 0 0 50px #06b6d4; border: 2px solid #06b6d4; }
-    .boss-rose { box-shadow: 0 0 80px rgba(225, 29, 72, 0.7), inset 0 0 50px #e11d48; border: 2px solid #e11d48; }
-    .boss-purple { box-shadow: 0 0 80px rgba(147, 51, 234, 0.7), inset 0 0 50px #9333ea; border: 2px solid #9333ea; }
-    .boss-amber { box-shadow: 0 0 80px rgba(217, 119, 6, 0.7), inset 0 0 50px #d97706; border: 2px solid #d97706; }
+      .galaxy-bg {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, #110005 0, #000000 100%);
+        z-index: -3;
+      }
+      .vignette {
+        position: absolute;
+        inset: 0;
+        box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.95);
+        pointer-events: none;
+        z-index: 10;
+        border-radius: inherit;
+      }
 
-    .enraged {
-      animation: horrifyingMorph 0.4s linear infinite, insaneJitter 0.15s infinite !important;
-      box-shadow: 0 0 150px var(--blood-red), inset 0 0 80px #000 !important;
-      border: 3px dashed #ff0000 !important;
-      background: #150000 !important;
-    }
+      .screen-shake {
+        animation: godShake 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      }
+      .kame-shake {
+        animation: godShake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) infinite !important;
+      }
+      .charge-rumble {
+        animation: kiRumble 0.05s infinite alternate;
+      }
 
-    @keyframes horrifyingMorph {
-      0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-      25% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
-      50% { border-radius: 40% 60% 80% 20% / 20% 80% 60% 40%; transform: scale(1.1); }
-      75% { border-radius: 80% 20% 40% 60% / 60% 40% 20% 80%; }
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-    @keyframes insaneJitter {
-      0% { transform: translate(2px, 2px) rotate(0.5deg); }
-      25% { transform: translate(-2px, -2px) rotate(-0.5deg); }
-      50% { transform: translate(3px, -3px) scale(1.05); }
-      75% { transform: translate(-3px, 2px) rotate(0.5deg); }
-      100% { transform: translate(0,0); }
-    }
+      @keyframes godShake {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) rotate(0deg);
+        }
+        10%,
+        50%,
+        90% {
+          transform: translate3d(-6px, 8px, 0) rotate(-0.5deg);
+        }
+        30%,
+        70% {
+          transform: translate3d(8px, -8px, 0) rotate(0.5deg);
+        }
+      }
+      @keyframes kiRumble {
+        0% {
+          transform: translate3d(2px, 2px, 0);
+        }
+        100% {
+          transform: translate3d(-2px, -2px, 0);
+        }
+      }
 
-    /* CHAOTIC EYES */
-    .horror-eyes {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      padding: 15px;
-    }
-    .void-eye {
-      width: 14px;
-      height: 14px;
-      background: #000;
-      border: 2px solid var(--blood-red);
-      border-radius: 50%;
-      box-shadow: 0 0 15px var(--blood-red), inset 0 0 6px var(--blood-red);
-      position: relative;
-      animation: paranoidLook 2.5s infinite;
-    }
-    .void-eye::after {
-      content: "";
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      width: 2px; height: 10px;
-      background: #fff; border-radius: 50%;
-      box-shadow: 0 0 6px #fff;
-    }
-    @keyframes paranoidLook {
-      0%, 100% { transform: scale(1) translate(0,0); }
-      10% { transform: scale(1.2) translate(2px, -2px); }
-      20% { transform: scale(0.8) translate(-2px, 2px); }
-      90% { transform: scale(1) translate(0,0); }
-      95% { transform: scale(0.1, 1.4); }
-    }
+      /* BUBBLE HỘI THOẠI BOSS */
+      #boss-dialogue-box {
+        position: absolute;
+        top: -65px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        color: #000;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        box-shadow:
+          0 5px 15px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba(255, 0, 60, 0.4);
+        border: 2px solid var(--blood-red);
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        z-index: 100;
+      }
+      #boss-dialogue-box::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 8px 8px 0;
+        border-style: solid;
+        border-color: #fff transparent transparent transparent;
+        z-index: 101;
+      }
+      #boss-dialogue-box::before {
+        content: "";
+        position: absolute;
+        bottom: -11px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 10px 10px 0;
+        border-style: solid;
+        border-color: var(--blood-red) transparent transparent transparent;
+        z-index: 100;
+      }
+      .dialogue-death {
+        color: var(--blood-red) !important;
+        font-size: 16px !important;
+        text-transform: uppercase;
+      }
 
-    .glitch-title {
-      text-shadow: 2px 2px 0px rgba(255, 0, 60, 0.6), -2px 2px 0px rgba(0, 229, 255, 0.6);
-      animation: titleGlitch 0.2s infinite;
-    }
-    @keyframes titleGlitch {
-      0%, 100% { transform: translate(0); }
-      50% { transform: translate(-1px, 1px); }
-    }
+      /* BOSS CONTAINER & PATROL MOVEMENT */
+      #boss-wrapper {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        width: 1px;
+        height: 1px;
+        z-index: 20;
+      }
+      .boss-patrol {
+        animation: patrolHover 5s ease-in-out infinite alternate;
+      }
+      @keyframes patrolHover {
+        0% {
+          transform: translate(-80px, -15px);
+        }
+        50% {
+          transform: translate(0px, 10px);
+        }
+        100% {
+          transform: translate(80px, -10px);
+        }
+      }
 
-    /* SLASH EFFECTS */
-    .slash-container {
-      position: absolute;
-      pointer-events: none;
-      z-index: 60;
-      transform: translate(-50%, -50%);
-      mix-blend-mode: plus-lighter;
-    }
-    .slash-line {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 0px; height: 3px;
-      background: linear-gradient(90deg, transparent, #fff 15%, var(--neon-accent) 50%, #fff 85%, transparent);
-      box-shadow: 0 0 25px var(--neon-accent), 0 0 8px #fff;
-      transform-origin: center;
-    }
-    .slash-1 { animation: executeSlash 0.22s cubic-bezier(0.1, 0.9, 0.2, 1) forwards; transform: translate(-50%, -50%) rotate(35deg); }
-    .slash-2 { animation: executeSlash 0.18s cubic-bezier(0.1, 0.9, 0.2, 1) forwards; transform: translate(-50%, -50%) rotate(-55deg); animation-delay: 0.04s; }
-    
-    @keyframes executeSlash {
-      0% { width: 0px; opacity: 1; filter: brightness(2); }
-      60% { width: 350px; opacity: 1; }
-      100% { width: 400px; opacity: 0; filter: brightness(1); }
-    }
+      #boss-container {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-    .shockwave {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      width: 150px; height: 150px;
-      border-radius: 50%;
-      border: 2px solid rgba(0, 229, 255, 0.4);
-      box-shadow: 0 0 40px rgba(0, 229, 255, 0.2), inset 0 0 20px rgba(0, 229, 255, 0.1);
-      animation: explodeWave 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @keyframes explodeWave {
-      0% { transform: translate(-50%, -50%) scale(0); opacity: 0.9; border-width: 6px; }
-      100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; border-width: 0px; }
-    }
+      .boss-entity {
+        width: 140px;
+        height: 140px;
+        background: #050505;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        animation: horrifyingMorph 2.5s linear infinite;
+      }
+      .boss-entity::before {
+        content: "";
+        position: absolute;
+        inset: -15px;
+        background: inherit;
+        border-radius: inherit;
+        filter: blur(20px);
+        opacity: 0.8;
+        z-index: -1;
+      }
+      .boss-cyan {
+        box-shadow:
+          0 0 80px rgba(6, 182, 212, 0.7),
+          inset 0 0 50px #06b6d4;
+        border: 2px solid #06b6d4;
+      }
+      .boss-rose {
+        box-shadow:
+          0 0 80px rgba(225, 29, 72, 0.7),
+          inset 0 0 50px #e11d48;
+        border: 2px solid #e11d48;
+      }
+      .boss-purple {
+        box-shadow:
+          0 0 80px rgba(147, 51, 234, 0.7),
+          inset 0 0 50px #9333ea;
+        border: 2px solid #9333ea;
+      }
+      .boss-amber {
+        box-shadow:
+          0 0 80px rgba(217, 119, 6, 0.7),
+          inset 0 0 50px #d97706;
+        border: 2px solid #d97706;
+      }
 
-    .spark {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 2px; height: 15px;
-      background: linear-gradient(to top, transparent, #fff);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--neon-accent);
-      pointer-events: none;
-      z-index: 65;
-      opacity: 0.8;
-      animation: sparkFly 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    @keyframes sparkFly {
-      0% { transform: translate(-50%, -50%) rotate(var(--rot)) translateY(0) scale(1); opacity: 1; }
-      100% { transform: translate(-50%, -50%) rotate(var(--rot)) translateY(var(--dist)) scale(0); opacity: 0; }
-    }
+      .enraged {
+        animation:
+          horrifyingMorph 0.4s linear infinite,
+          insaneJitter 0.15s infinite !important;
+        box-shadow:
+          0 0 150px var(--blood-red),
+          inset 0 0 80px #000 !important;
+        border: 3px dashed #ff0000 !important;
+        background: #150000 !important;
+      }
 
-    /* DAMAGE NUMBERS */
-    .damage-popup {
-      position: absolute;
-      font-family: "Orbitron", sans-serif;
-      font-weight: 900;
-      font-size: 2.5rem;
-      color: #fff;
-      text-shadow: 0 0 15px var(--blood-red), 3px 3px 0 #000;
-      pointer-events: none;
-      animation: epicDamage 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      z-index: 70;
-    }
-    .damage-crit {
-      font-size: 4rem;
-      color: #ffbc00;
-      text-shadow: 0 0 30px #ff0000, 5px 5px 0 #000;
-      z-index: 75;
-    }
-    @keyframes epicDamage {
-      0% { opacity: 1; transform: translate(-50%, 0) scale(0.3); }
-      25% { transform: translate(-50%, -60px) scale(1.2); }
-      100% { opacity: 0; transform: translate(-50%, -120px) scale(0.9); }
-    }
+      @keyframes horrifyingMorph {
+        0%,
+        100% {
+          border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        }
+        50% {
+          border-radius: 40% 60% 80% 20% / 20% 80% 60% 40%;
+          transform: scale(1.05);
+        }
+      }
+      @keyframes insaneJitter {
+        0% {
+          transform: translate(2px, 2px) rotate(0.5deg);
+        }
+        50% {
+          transform: translate(-2px, -3px) scale(1.05);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
 
-    /* UI ELEMENTS */
-    .central-hud {
-      position: absolute;
-      bottom: 30px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 24px;
-      z-index: 50;
-      pointer-events: none;
-    }
-    
-    #hero-portrait {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      border: 3px solid var(--neon-accent);
-      box-shadow: 0 0 30px rgba(0, 229, 255, 0.5), inset 0 0 20px rgba(0, 229, 255, 0.3);
-      background: #000;
-      position: relative;
-      z-index: 51;
-      flex-shrink: 0;
-    }
-    #mit-hero-mover {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      transform: scale(1.15);
-      transition: all 0.1s ease-out;
-      filter: grayscale(5%) contrast(115%) brightness(105%);
-    }
+      .horror-eyes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 15px;
+      }
+      .void-eye {
+        width: 14px;
+        height: 14px;
+        background: #000;
+        border: 2px solid var(--blood-red);
+        border-radius: 50%;
+        animation: paranoidLook 2.5s infinite;
+      }
+      .void-eye::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2px;
+        height: 10px;
+        background: #fff;
+        box-shadow: 0 0 6px #fff;
+      }
 
-    .hero-striking {
-      box-shadow: 0 0 60px #fff, 0 0 100px var(--neon-accent) !important;
-      border: 3px solid #fff !important;
-      filter: brightness(150%) !important;
-      z-index: 999;
-    }
+      /* KAMEHAMEHA BEAM ANIMATION */
+      .kamehameha-beam {
+        position: absolute;
+        bottom: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        background: linear-gradient(
+          to top,
+          #ffffff,
+          #80ffff 30%,
+          #00e5ff 80%,
+          transparent
+        );
+        box-shadow:
+          0 0 80px var(--beam-outer),
+          0 0 150px var(--beam-core),
+          inset 0 0 40px #fff;
+        border-radius: 60px 60px 0 0;
+        z-index: 45;
+        transform-origin: bottom center;
+        animation: shootBeam 0.8s ease-in forwards;
+        mix-blend-mode: screen;
+      }
+      @keyframes shootBeam {
+        0% {
+          height: 0;
+          opacity: 1;
+          width: 20px;
+          filter: brightness(3);
+        }
+        15% {
+          height: 60vh;
+          width: 140px;
+          filter: brightness(2);
+          box-shadow:
+            0 0 200px var(--beam-outer),
+            0 0 300px var(--beam-core);
+        }
+        80% {
+          height: 60vh;
+          width: 120px;
+          opacity: 1;
+          filter: brightness(1.5);
+        }
+        100% {
+          height: 60vh;
+          width: 0px;
+          opacity: 0;
+          filter: brightness(1);
+        }
+      }
 
-    #attack-btn {
-      width: 90px;
-      height: 90px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #ff003c 0%, #8a0000 100%);
-      border: 2px solid #ffbc00;
-      border-bottom-width: 8px;
-      box-shadow: 0 10px 30px rgba(255, 0, 60, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      pointer-events: auto;
-      cursor: pointer;
-      transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-      flex-shrink: 0;
-    }
-    #attack-btn:active {
-      transform: translateY(6px);
-      border-bottom-width: 2px;
-      box-shadow: 0 0 40px rgba(255, 0, 60, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.8);
-    }
-    #attack-btn span {
-      font-family: "Orbitron", sans-serif;
-      font-weight: 900;
-      font-size: 13px;
-      color: #fff;
-      text-shadow: 0 2px 3px #000;
-    }
-    .attack-icon { font-size: 28px; margin-bottom: -2px; filter: drop-shadow(0 2px 3px #000); }
+      /* NORMAL SLASH EFFECTS */
+      .slash-line {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          #fff 15%,
+          var(--neon-accent) 50%,
+          #fff 85%,
+          transparent
+        );
+        transform-origin: center;
+        mix-blend-mode: plus-lighter;
+        z-index: 60;
+      }
+      .slash-1 {
+        transform: translate(-50%, -50%) rotate(35deg);
+        animation: executeSlash 0.22s forwards;
+      }
+      .slash-2 {
+        transform: translate(-50%, -50%) rotate(-55deg);
+        animation: executeSlash 0.18s forwards;
+        animation-delay: 0.04s;
+      }
+      @keyframes executeSlash {
+        0% {
+          width: 0px;
+          opacity: 1;
+          filter: brightness(2);
+        }
+        60% {
+          width: 350px;
+        }
+        100% {
+          width: 400px;
+          opacity: 0;
+        }
+      }
 
-    /* MODALS */
-    .rpg-loot-container {
-      background: rgba(5, 5, 10, 0.85);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid rgba(0, 229, 255, 0.3);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 229, 255, 0.1);
-      border-radius: 24px;
-    }
-    .btn-mythic {
-      background: linear-gradient(135deg, #00e5ff 0%, #007bb5 100%);
-      box-shadow: 0 5px 30px rgba(0, 229, 255, 0.4);
-      border: 1px solid #fff;
-      color: #000;
-      transition: all 0.2s;
-    }
-    .btn-mythic:active { transform: scale(0.96); box-shadow: 0 0 40px #00e5ff; }
-  </style>
-</head>
+      .damage-popup {
+        position: absolute;
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        color: #fff;
+        text-shadow:
+          0 0 15px var(--blood-red),
+          3px 3px 0 #000;
+        animation: epicDamage 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        z-index: 70;
+      }
+      .damage-kame {
+        font-size: 5rem;
+        color: #fff;
+        text-shadow:
+          0 0 50px var(--beam-outer),
+          0 0 20px #000,
+          5px 5px 0 #000;
+        z-index: 80;
+      }
+      @keyframes epicDamage {
+        0% {
+          opacity: 1;
+          transform: translate(-50%, 0) scale(0.3);
+        }
+        25% {
+          transform: translate(-50%, -60px) scale(1.2);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -120px) scale(0.9);
+        }
+      }
 
-<body>
+      /* UI BÊN DƯỚI */
+      .central-hud {
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 24px;
+        z-index: 50;
+        pointer-events: none;
+      }
+      #hero-portrait {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        border: 3px solid var(--neon-accent);
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+        background: #000;
+        position: relative;
+        z-index: 51;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+      }
+      #mit-hero-mover {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        transform: scale(1.15);
+        filter: grayscale(5%) contrast(115%) brightness(105%);
+      }
 
-  <div class="desktop-ambient"></div>
+      .hero-striking {
+        box-shadow:
+          0 0 60px #fff,
+          0 0 100px var(--neon-accent) !important;
+        border: 3px solid #fff !important;
+        filter: brightness(150%) !important;
+        z-index: 999;
+      }
+      .hero-charging {
+        animation: dragonballAura 0.08s infinite alternate !important;
+        border-color: var(--ki-gold) !important;
+        box-shadow:
+          0 0 50px var(--ki-gold),
+          0 0 100px #ff4500,
+          inset 0 0 25px var(--ki-gold) !important;
+      }
+      .hero-kame {
+        animation: kameBeamAura 0.1s infinite alternate !important;
+        border-color: #fff !important;
+        box-shadow:
+          0 0 100px var(--beam-outer),
+          0 0 200px var(--beam-core) !important;
+        filter: brightness(200%) !important;
+      }
+      @keyframes dragonballAura {
+        0% {
+          transform: scale(1.05) rotate(-2deg);
+          filter: brightness(1.3);
+        }
+        100% {
+          transform: scale(1.15) rotate(2deg);
+          filter: brightness(1.6);
+        }
+      }
+      @keyframes kameBeamAura {
+        0% {
+          transform: translateY(5px) scale(1.1);
+        }
+        100% {
+          transform: translateY(-5px) scale(1.1);
+        }
+      }
 
-  <div id="game-console">
-    
-    <audio id="bg-music" src="A Little Dream Of Me Original Soundtrack.mp3" loop></audio>
-    <div id="flash-overlay" class="absolute inset-0 pointer-events-none z-[100] rounded-inherit"></div>
-    
-    <div class="galaxy-bg rounded-inherit"><div class="blood-mist rounded-inherit"></div></div>
-    <div class="vignette"></div>
+      #attack-btn {
+        width: 90px;
+        height: 90px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, #ff003c 0%, #8a0000 100%);
+        border: 2px solid #ffbc00;
+        border-bottom-width: 8px;
+        box-shadow: 0 10px 30px rgba(255, 0, 60, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        pointer-events: auto;
+        cursor: pointer;
+        transition: all 0.1s;
+        flex-shrink: 0;
+      }
+      #attack-btn:active {
+        transform: translateY(6px);
+        border-bottom-width: 2px;
+        box-shadow: 0 0 40px rgba(255, 0, 60, 0.8);
+      }
+      #attack-btn span {
+        font-family: "Orbitron", sans-serif;
+        font-weight: 900;
+        font-size: 13px;
+        color: #fff;
+        text-shadow: 0 2px 3px #000;
+      }
 
-    <div class="w-full flex justify-between items-center px-4 py-5 z-10 bg-black/60 backdrop-blur-md border-b border-cyan-500/20 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative">
-      <div class="flex flex-col">
-        <span class="text-[10px] text-cyan-400 font-rpg tracking-[0.2em] uppercase drop-shadow-md">Thực Thể</span>
-        <span class="text-base font-bold text-white font-rpg tracking-widest text-shadow-sm">MITXGAI</span>
+      .rpg-loot-container {
+        background: rgba(5, 5, 10, 0.85);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(0, 229, 255, 0.3);
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.8),
+          0 0 40px rgba(0, 229, 255, 0.1);
+        border-radius: 24px;
+      }
+      .btn-mythic {
+        background: linear-gradient(135deg, #00e5ff 0%, #007bb5 100%);
+        box-shadow: 0 5px 30px rgba(0, 229, 255, 0.4);
+        border: 1px solid #fff;
+        color: #000;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-mythic:active {
+        transform: scale(0.96);
+        box-shadow: 0 0 40px #00e5ff;
+      }
+
+      #ki-hint {
+        animation: pulseHint 1s infinite alternate;
+      }
+      @keyframes pulseHint {
+        0% {
+          opacity: 0.5;
+          transform: translate(-50%, 0) scale(0.95);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(-50%, 0) scale(1.05);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="desktop-ambient"></div>
+
+    <div id="game-console">
+      <div
+        id="start-screen"
+        class="absolute inset-0 bg-black/90 z-[999] flex flex-col items-center justify-center backdrop-blur-md"
+      >
+        <h1
+          class="font-rpg text-4xl text-cyan-400 mb-2 text-center px-4 leading-tight"
+          style="
+            text-shadow:
+              2px 2px 0px rgba(255, 0, 60, 0.6),
+              -2px 2px 0px rgba(0, 229, 255, 0.6);
+          "
+        >
+          MIT'S road to the FINAL EXAM.
+        </h1>
+        <p
+          class="text-yellow-400 font-rpg text-sm tracking-widest mb-10 text-center"
+        >
+          Let's see how this powerful warrior will overcome the challenges ahead
+          and conquer the final exam with flying colors! 🚀📚
+        </p>
+        <button
+          id="start-btn"
+          class="btn-mythic px-10 py-4 rounded-xl font-rpg font-bold tracking-widest text-lg"
+        >
+          ENTER GAME
+        </button>
       </div>
-      <div class="flex flex-col items-end">
-        <span class="text-[10px] text-red-500 font-rpg tracking-[0.2em] uppercase drop-shadow-md">Vực Thẳm</span>
-        <span id="stage-counter" class="text-base font-black text-yellow-400 font-rpg drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]">STAGE 1/4</span>
-      </div>
-    </div>
 
-    <div id="action-zone" class="flex-1 w-full relative overflow-hidden">
-      <div id="boss-container">
-        <div class="absolute -top-20 left-1/2 transform -translate-x-1/2 w-64 text-center">
-          <div id="boss-title" class="font-rpg font-black text-lg tracking-widest uppercase mb-3 text-red-100 transition-all">
-            Thực Thể Logic
+      <audio
+        id="bg-music"
+        src="A Little Dream Of Me Original Soundtrack.mp3"
+        loop
+      ></audio>
+
+      <div id="game-play-area" class="h-full w-full flex flex-col relative">
+        <div class="galaxy-bg rounded-inherit"></div>
+        <div class="vignette"></div>
+
+        <div
+          class="w-full flex justify-between items-center px-4 py-5 z-10 bg-black/60 backdrop-blur-md border-b border-cyan-500/20 shadow-[0_0_30px_rgba(0,229,255,0.1)] relative"
+        >
+          <div class="flex flex-col">
+            <span
+              class="text-[10px] text-cyan-400 font-rpg tracking-[0.2em] uppercase drop-shadow-md"
+              >Tiên Nữ</span
+            ><span
+              class="text-base font-bold text-white font-rpg tracking-widest text-shadow-sm"
+              >MITXGAI</span
+            >
           </div>
-          <div class="w-full h-4 bg-neutral-950 border border-white/20 rounded-full overflow-hidden shadow-[0_0_30px_rgba(255,0,0,0.6)] relative">
-            <div id="boss-hp-bar" class="h-full bg-gradient-to-r from-red-800 via-red-500 to-yellow-400 w-full transition-all duration-100"></div>
+          <div class="flex flex-col items-end">
+            <span
+              class="text-[10px] text-red-500 font-rpg tracking-[0.2em] uppercase drop-shadow-md"
+              >Vực Thẳm</span
+            ><span
+              id="stage-counter"
+              class="text-base font-black text-yellow-400 font-rpg drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]"
+              >STAGE 1/4</span
+            >
           </div>
         </div>
-        <div id="boss-entity" class="boss-entity boss-cyan">
-          <div class="horror-eyes" id="boss-eyes"></div>
+
+        <div id="action-zone" class="flex-1 w-full relative overflow-hidden">
+          <div id="boss-wrapper" class="boss-patrol">
+            <div id="boss-container">
+              <div id="boss-dialogue-box">Gãi ngứa à?</div>
+
+              <div class="absolute -top-20 w-64 text-center">
+                <div
+                  id="boss-title"
+                  class="font-rpg font-black text-lg tracking-widest uppercase mb-3 text-red-100 transition-all"
+                >
+                  Thực Thể Logic
+                </div>
+                <div
+                  class="w-full h-4 bg-neutral-950 border border-white/20 rounded-full overflow-hidden shadow-[0_0_30px_rgba(255,0,0,0.6)]"
+                >
+                  <div
+                    id="boss-hp-bar"
+                    class="h-full bg-gradient-to-r from-red-800 via-red-500 to-yellow-400 w-full transition-all duration-100"
+                  ></div>
+                </div>
+              </div>
+              <div id="boss-entity" class="boss-entity boss-cyan">
+                <div class="horror-eyes" id="boss-eyes"></div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="ki-hint"
+            class="absolute bottom-40 left-1/2 -translate-x-1/2 font-rpg text-yellow-400 text-xs tracking-widest uppercase opacity-0 pointer-events-none drop-shadow-[0_0_10px_rgba(255,215,0,1)] transition-opacity duration-300"
+          >
+            Thả Tay Để Tung KAMEHAMEHA !
+          </div>
+
+          <div
+            id="ki-charge-hud"
+            class="absolute left-1/2 -translate-x-1/2 bottom-28 w-56 h-3 bg-black/80 border border-yellow-500/40 rounded-full overflow-hidden opacity-0 scale-90 pointer-events-none transition-all duration-200 shadow-[0_0_20px_rgba(255,188,0,0.2)]"
+          >
+            <div
+              id="ki-charge-fill"
+              class="h-full w-0 bg-gradient-to-r from-amber-500 via-yellow-400 to-white shadow-[0_0_15px_#ffbc00]"
+            ></div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="central-hud">
-      <div id="hero-portrait">
-        <img id="mit-hero-mover" src="IMG_2599.PNG" alt="Mit" />
-      </div>
-      <button id="attack-btn">
-        <div class="attack-icon">⚔️</div>
-        <span>CHÉM</span>
-      </button>
-    </div>
-
-    <div id="reward-modal" class="hidden absolute inset-0 bg-black/80 z-[150] overflow-y-auto backdrop-blur-xl">
-      <div class="flex min-h-full items-center justify-center p-4">
-        <div class="w-full max-w-[90%] rpg-loot-container p-6 md:p-8 transform scale-90 opacity-0 transition-all duration-500" id="reward-content">
-          <div class="text-center mt-2 mb-6">
-            <span class="text-[11px] font-rpg text-cyan-400 font-bold tracking-[0.3em] uppercase block mb-2 drop-shadow-[0_0_10px_rgba(0,229,255,0.7)]">BOSS BỊ TIÊU DIỆT</span>
-            <h3 class="text-2xl md:text-3xl font-black font-mythic text-yellow-400 drop-shadow-[0_0_20px_rgba(255,215,0,1)] leading-tight" id="loot-title"></h3>
+        <div class="central-hud">
+          <div id="hero-portrait">
+            <img id="mit-hero-mover" src="IMG_2599.PNG" alt="Mit" />
           </div>
-          <div class="bg-black/80 border border-cyan-500/20 rounded-xl p-6 text-center relative shadow-[inset_0_0_30px_rgba(0,229,255,0.1)]">
-            <p id="loot-message" class="font-love text-2xl md:text-3xl leading-relaxed text-cyan-50 drop-shadow-md"></p>
-          </div>
-          <button id="claim-btn" class="w-full mt-6 btn-mythic font-rpg font-black py-4 rounded-xl tracking-[0.15em] text-sm md:text-base uppercase">
-            TIẾP TỤC SĂN LÙNG
+          <button id="attack-btn">
+            <div
+              class="text-2xl mb-[-2px] attack-icon"
+              style="filter: drop-shadow(0 2px 3px #000)"
+            >
+              ⚔️
+            </div>
+            <span id="attack-text">CHit</span>
           </button>
         </div>
       </div>
-    </div>
 
-    <div id="grand-finale-screen" class="hidden absolute inset-0 bg-black/90 z-[150] overflow-y-auto backdrop-blur-xl">
-      <div class="flex min-h-full items-center justify-center p-4">
-        <div class="w-full max-w-[95%] rpg-loot-container p-8 md:p-10 transform scale-90 opacity-0 transition-all duration-1000 ease-out border-yellow-500/40 shadow-[0_0_100px_rgba(255,215,0,0.2)]" id="final-artifact">
-          <div class="flex flex-col items-center border-b border-yellow-500/30 pb-6 mt-2">
-            <div class="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-[4px] border-yellow-400 mb-6 shadow-[0_0_80px_rgba(255,215,0,0.8)] bg-black relative flex-shrink-0">
-              <img src="IMG_2608.PNG" alt="Mit" class="w-full h-full object-cover scale-110" />
-              <div class="absolute inset-0 shadow-[inset_0_0_30px_rgba(255,215,0,0.5)]"></div>
+      <div
+        id="reward-modal"
+        class="hidden absolute inset-0 bg-black/80 z-[150] overflow-y-auto backdrop-blur-xl"
+      >
+        <div class="flex min-h-full items-center justify-center p-4">
+          <div
+            class="w-full max-w-[90%] rpg-loot-container p-6 md:p-8 transform scale-90 opacity-0 transition-all duration-500"
+            id="reward-content"
+          >
+            <div class="text-center mt-2 mb-6">
+              <span
+                class="text-[11px] font-rpg text-cyan-400 font-bold tracking-[0.3em] uppercase block mb-2 drop-shadow-[0_0_10px_rgba(0,229,255,0.7)]"
+                >BOSS BỊ TIÊU DIỆT</span
+              >
+              <h3
+                id="loot-title"
+                class="text-2xl font-black text-yellow-400 font-rpg tracking-wider uppercase text-shadow-md"
+              ></h3>
             </div>
-            <h4 class="text-lg md:text-xl font-rpg text-yellow-400 font-black tracking-[0.3em] uppercase text-center drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]">
-              [THẦN THOẠI BẬC SSS]<br />
-              <span class="text-white text-2xl md:text-3xl mt-3 block text-shadow-lg">CHÚA TỂ PHÒNG THI</span>
-            </h4>
+            <div
+              id="loot-message"
+              class="py-4 font-love text-2xl md:text-3xl text-neutral-200 border-t border-b border-white/10 leading-relaxed text-center my-4"
+            ></div>
+            <div class="text-center pt-2">
+              <button
+                id="claim-btn"
+                class="px-8 py-3 rounded-xl font-rpg font-bold tracking-widest text-sm btn-mythic"
+              >
+                THU THẬP TÍNH CHẤT
+              </button>
+            </div>
           </div>
-          <div class="py-6 space-y-4 font-love text-2xl md:text-[1.8rem] leading-relaxed text-justify text-amber-50">
-            <p class="font-bold text-4xl md:text-5xl text-yellow-400 font-mythic drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] text-center mb-4">
-              Gửi Mit ,
-            </p>
-            <p>
-              Ôn bài xong hết ròi giờ đến lúc thể hiện thoi, những đêm học bài chăm chỉ đèn sách ròi cũng sẽ được đền đáp, hãy cứ tự tin bước vào phòng thi và tỏa sáng như những vì sao trên bầu trời đêm nha.
-            </p>
-            <p>
-              Tui tin pà sẽ làm tốt, mấy cái môn nì không làm khó được pà đâu, cứ bình tĩnh và thể hiện hết khả năng của mình nhá.
-            </p>
-          </div>
-          <div class="text-right text-2xl md:text-3xl font-love text-yellow-400 font-bold border-t border-yellow-500/30 pt-6 mt-2 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
-            Bi chúc Mit thi tốt, nhai đề rộp rộp nhaaa ⚔️✨🔥👑
+        </div>
+      </div>
+
+      <div
+        id="grand-finale-screen"
+        class="hidden absolute inset-0 bg-black z-[200] overflow-y-auto backdrop-blur-3xl"
+        style="
+          background: radial-gradient(
+            circle at center,
+            #1a0f00 0%,
+            #020205 100%
+          );
+        "
+      >
+        <div class="flex min-h-full items-center justify-center p-4">
+          <div
+            class="w-full max-w-[95%] rpg-loot-container p-8 md:p-10 transform scale-90 opacity-0 transition-all duration-1000 ease-out border-yellow-500/40 shadow-[0_0_100px_rgba(255,215,0,0.2)]"
+            id="final-artifact"
+          >
+            <div
+              class="flex flex-col items-center border-b border-yellow-500/30 pb-6 mt-2"
+            >
+              <div
+                class="w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-[4px] border-yellow-400 mb-6 shadow-[0_0_80px_rgba(255,215,0,0.8)] bg-black relative flex-shrink-0"
+              >
+                <img
+                  src="IMG_2608.PNG"
+                  alt="Mit"
+                  class="w-full h-full object-cover scale-110"
+                />
+                <div
+                  class="absolute inset-0 shadow-[inset_0_0_30px_rgba(255,215,0,0.5)]"
+                ></div>
+              </div>
+              <h4
+                class="text-lg md:text-xl font-rpg text-yellow-400 font-black tracking-[0.3em] uppercase text-center drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]"
+              >
+                [THẦN THOẠI BẬC SSS]<br />
+                <span
+                  class="text-white text-2xl md:text-3xl mt-3 block text-shadow-lg"
+                  >CHÚA TỂ PHÒNG THI</span
+                >
+              </h4>
+            </div>
+            <div
+              class="py-6 space-y-4 font-love text-2xl md:text-[1.8rem] leading-relaxed text-justify text-amber-50"
+            >
+              <p
+                class="font-bold text-4xl md:text-5xl text-yellow-400 font-mythic drop-shadow-[0_0_10px_rgba(255,215,0,0.8)] text-center mb-4"
+              >
+                Gửi Mit,
+              </p>
+              <p>
+                Ôn bài xong hết ròi giờ đến lúc thể hiện thoi, những đêm học bài
+                chăm chỉ đèn sách ròi cũng sẽ được đền đáp, hãy cứ tự tin bước
+                vào phòng thi và tỏa sáng như những vì sao trên bầu trời đêm
+                nha.
+              </p>
+              <p>
+                Tui tin pà sẽ làm tốt, mấy cái môn nì không làm khó được pà đâu,
+                cứ bình tĩnh và thể hiện hết khả năng của mình nhá.
+              </p>
+            </div>
+            <div
+              class="text-right text-2xl md:text-3xl font-love text-yellow-400 font-bold border-t border-yellow-500/30 pt-6 mt-2 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]"
+            >
+              Bi chúc Mit thi tốt, nhai đề rộp rộp nhaaa ⚔️✨🔥👑
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-  </div> <script>
-    const stagesData = [
-      {
-        name: "Thực Thể Logic", hp: 5000, maxHp: 5000, color: "cyan", eyes: 5,
-        lootTitle: "[Lõi Không Gian] Tinh Thể Logic",
-        lootMessage: "Môn này thi đầu tiên nên tui để lên đầu nhaa, Chúc cho Mit bình tĩnh bản lĩnh chit môn này 1 cách dễ dàng nha. Bạch Nguyệt Quang sẽ mở lòng với pà thui. Thi tốt nhá! 🌌",
-      },
-      {
-        name: "Bóng Ma Pháp Luật", hp: 6000, maxHp: 6000, color: "rose", eyes: 7,
-        lootTitle: "[Thánh Tích] Cuộn Trán Phán Xét",
-        lootMessage: "Môn này tui không biết bà khi nào thi nên để tạm ở dưới nhaa. Chúc cho Mit chia thừa kế ngon lành nhé ⚖️💫",
-      },
-      {
-        name: "Ác Mộng Tâm Lý", hp: 8000, maxHp: 8000, color: "purple", eyes: 10,
-        lootTitle: "[Mắt Thần] Thấu Kính Chân Lý",
-        lootMessage: "Môn tâm lý này mà thi hong được là cô buồn lắm à nha. Đùa chứ tui tin pà làm được mờ, mấy cái Tâm Lý Học này Mit nhai cái một à he. Fighting!!! ️✨",
-      },
-      {
-        name: "Vực Thẳm Kinh Tế", hp: 12000, maxHp: 12000, color: "amber", eyes: 15,
-        lootTitle: "[Quyền Trượng] Hạch Tâm Kinh Tế",
-        lootMessage: "Môn này là môn cuối cùng nên tui để lên cuối nhaa. Chúc cho Mit thi tốt môn này nha. Tính toán cho ngon lành nhá 💰🌟",
-      },
-    ];
+    <script>
+      const stagesData = [
+        {
+          name: "Thực Thể Logic",
+          hp: 6000,
+          maxHp: 6000,
+          color: "cyan",
+          eyes: 5,
+          lootTitle: "[Lõi Không Gian] Tinh Thể Logic",
+          lootMessage:
+            "Môn này thi đầu tiên nên tui để lên đầu nhaa, Chúc cho Mit bình tĩnh bản lĩnh chit môn này 1 cách dễ dàng nha. Bạch Nguyệt Quang sẽ mở lòng với pà thui. Thi tốt nhá! 🌌",
+        },
+        {
+          name: "Bóng Ma Pháp Luật",
+          hp: 8000,
+          maxHp: 8000,
+          color: "rose",
+          eyes: 7,
+          lootTitle: "[Thánh Tích] Cuộn Trán Phán Xét",
+          lootMessage:
+            "Môn này tui không biết bà khi nào thi nên để tạm ở dưới nhaa. Chúc cho Mit chia thừa kế ngon lành nhé ⚖️💫",
+        },
+        {
+          name: "Ác Mộng Tâm Lý",
+          hp: 10000,
+          maxHp: 10000,
+          color: "purple",
+          eyes: 10,
+          lootTitle: "[Tâm Nhãn] Kính Vạn Hoa",
+          lootMessage:
+            "Cái môn tâm lý này mà thi hong được là cô buồn lắm à nha. Đùa chứ tui tin pà làm được mờ, mấy cái Tâm Lý Học này Mit nhai cái một à he. Fighting!!! ⚔️✨",
+        },
+        {
+          name: "Vực Thẳm Kinh Tế",
+          hp: 15000,
+          maxHp: 15000,
+          color: "amber",
+          eyes: 15,
+          lootTitle: "[Quyền Trượng] Hạch Tâm Kinh Tế",
+          lootMessage:
+            "Môn này là môn cuối cùng nên tui để lên cuối nhaa. Chúc cho Mit thi tốt môn này nha. Tính toán cho ngon lành nhá 💰🌟",
+        },
+      ];
 
-    let currentStageIdx = 0;
-    let bossMoveInterval;
-    let isBossDead = false;
-    let isEnraged = false;
+      const taunts = [
+        "Gãi ngứa à Mit?",
+        "Yếu đuối quá!",
+        "Muỗi đốt inox!",
+        "Làm lại đi má!",
+        "Chưa đủ đô đâu!",
+        "Chỉ thế thôi sao?",
+        "Chém mỏi tay chưa?",
+      ];
 
-    // TARGET ELEMENTS BOUND TO CONSOLE, NOT SCREEN
-    const gameConsole = document.getElementById("game-console");
-    const actionZone = document.getElementById("action-zone");
-    const bossContainer = document.getElementById("boss-container");
-    const bossEntity = document.getElementById("boss-entity");
-    const bossEyes = document.getElementById("boss-eyes");
-    const bossTitle = document.getElementById("boss-title");
-    const bossHpBar = document.getElementById("boss-hp-bar");
-    const stageCounter = document.getElementById("stage-counter");
-    const flashOverlay = document.getElementById("flash-overlay");
-    const heroPortrait = document.getElementById("hero-portrait");
-    const mitHeroMover = document.getElementById("mit-hero-mover");
-    const attackBtn = document.getElementById("attack-btn");
-    const rewardModal = document.getElementById("reward-modal");
-    const rewardContent = document.getElementById("reward-content");
-    const grandFinaleScreen = document.getElementById("grand-finale-screen");
+      let currentStageIdx = 0;
+      let currentHp = 0;
+      let isBossDead = false;
+      let isEnraged = false;
+      let holdStartTime = 0;
+      let holdTimer = null;
+      let isChargingKi = false;
+      let isBeamActive = false;
+      const KI_CHARGE_REQUIRED = 1200; // 1.2s để đầy thanh Ki
 
-    const AudioEngine = {
-      ctx: null,
-      init() {
-        if (!this.ctx) { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); }
-        if (this.ctx.state === "suspended") { this.ctx.resume(); }
-      },
-      playSlash() {
-        this.init();
-        const now = this.ctx.currentTime;
-        const oscWind = this.ctx.createOscillator();
-        const gainWind = this.ctx.createGain();
-        oscWind.type = "triangle";
-        oscWind.frequency.setValueAtTime(1400, now);
-        oscWind.frequency.exponentialRampToValueAtTime(150, now + 0.12);
-        gainWind.gain.setValueAtTime(0.2, now);
-        gainWind.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-        oscWind.connect(gainWind).connect(this.ctx.destination);
-        
-        const oscCling = this.ctx.createOscillator();
-        const gainCling = this.ctx.createGain();
-        oscCling.type = "sine";
-        oscCling.frequency.setValueAtTime(3800, now);
-        oscCling.frequency.setValueAtTime(2200, now + 0.03);
-        gainCling.gain.setValueAtTime(0.1, now);
-        gainCling.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-        oscCling.connect(gainCling).connect(this.ctx.destination);
-        
-        oscWind.start(now); oscWind.stop(now + 0.12);
-        oscCling.start(now); oscCling.stop(now + 0.06);
-      },
-      playDeath() {
-        this.init();
-        const now = this.ctx.currentTime;
-        const subOsc = this.ctx.createOscillator();
-        const subGain = this.ctx.createGain();
-        subOsc.type = "sine";
-        subOsc.frequency.setValueAtTime(110, now);
-        subOsc.frequency.linearRampToValueAtTime(25, now + 1.4);
-        subGain.gain.setValueAtTime(0.4, now);
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
-        subOsc.connect(subGain).connect(this.ctx.destination);
-        subOsc.start(now); subOsc.stop(now + 1.4);
+      const gameConsole = document.getElementById("game-console");
+      const actionZone = document.getElementById("action-zone");
+      const bossWrapper = document.getElementById("boss-wrapper");
+      const bossEntity = document.getElementById("boss-entity");
+      const bossHpBar = document.getElementById("boss-hp-bar");
+      const heroPortrait = document.getElementById("hero-portrait");
+      const attackBtn = document.getElementById("attack-btn");
+      const kiChargeFill = document.getElementById("ki-charge-fill");
+      const kiHint = document.getElementById("ki-hint");
+      const diagBox = document.getElementById("boss-dialogue-box");
 
-        for (let i = 0; i < 4; i++) {
-          const delay = i * 0.12;
-          const chimeOsc = this.ctx.createOscillator();
-          const chimeGain = this.ctx.createGain();
-          chimeOsc.type = "sine";
-          chimeOsc.frequency.setValueAtTime(2200 - i * 400, now + delay);
-          chimeGain.gain.setValueAtTime(0.06, now + delay);
-          chimeGain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.25);
-          chimeOsc.connect(chimeGain).connect(this.ctx.destination);
-          chimeOsc.start(now + delay);
-          chimeOsc.stop(now + delay + 0.25);
+      const AudioEngine = {
+        ctx: null,
+        chargeOsc: null,
+        chargeGain: null,
+        init() {
+          if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          }
+          if (this.ctx.state === "suspended") this.ctx.resume();
+        },
+        playSlash() {
+          this.init();
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator(),
+            gain = this.ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(1400, now);
+          osc.frequency.exponentialRampToValueAtTime(150, now + 0.12);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.connect(gain).connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        },
+        startChargeAudio() {
+          this.init();
+          const now = this.ctx.currentTime;
+          this.chargeOsc = this.ctx.createOscillator();
+          this.chargeGain = this.ctx.createGain();
+          this.chargeOsc.type = "sawtooth";
+          this.chargeOsc.frequency.setValueAtTime(160, now);
+          this.chargeOsc.frequency.linearRampToValueAtTime(
+            850,
+            now + KI_CHARGE_REQUIRED / 1000,
+          );
+          this.chargeGain.gain.setValueAtTime(0.02, now);
+          this.chargeGain.gain.linearRampToValueAtTime(
+            0.2,
+            now + KI_CHARGE_REQUIRED / 1000,
+          );
+          this.chargeOsc.connect(this.chargeGain).connect(this.ctx.destination);
+          this.chargeOsc.start(now);
+        },
+        stopChargeAudio() {
+          if (this.chargeOsc) {
+            try {
+              this.chargeOsc.stop();
+            } catch (e) {}
+            this.chargeOsc = null;
+          }
+        },
+        playKamehameha() {
+          this.init();
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator(),
+            gain = this.ctx.createGain();
+          osc.type = "square";
+          osc.frequency.setValueAtTime(50, now);
+          osc.frequency.exponentialRampToValueAtTime(1200, now + 0.8);
+          gain.gain.setValueAtTime(0.5, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+          osc.connect(gain).connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.9);
+        },
+      };
+
+      document.getElementById("start-btn").addEventListener("click", () => {
+        document.getElementById("start-screen").style.display = "none";
+        AudioEngine.init();
+        document.getElementById("bg-music").volume = 0.4;
+        document
+          .getElementById("bg-music")
+          .play()
+          .catch((e) => console.log(e));
+        initStage();
+      });
+
+      function showTaunt(text, duration = 1500, isDeath = false) {
+        diagBox.textContent = text;
+        diagBox.style.opacity = "1";
+        diagBox.style.transform = "translateX(-50%) translateY(0) scale(1)";
+        if (isDeath) diagBox.classList.add("dialogue-death");
+        else diagBox.classList.remove("dialogue-death");
+
+        if (window.tauntTimeout) clearTimeout(window.tauntTimeout);
+        if (!isDeath) {
+          window.tauntTimeout = setTimeout(() => {
+            diagBox.style.opacity = "0";
+            diagBox.style.transform =
+              "translateX(-50%) translateY(10px) scale(0.9)";
+          }, duration);
         }
-      },
-    };
-
-    function initStage() {
-      isBossDead = false;
-      isEnraged = false;
-      const currentBoss = stagesData[currentStageIdx];
-      bossTitle.textContent = currentBoss.name;
-      bossTitle.className = "font-rpg font-black text-lg md:text-xl tracking-widest uppercase mb-3 glitch-title text-white";
-      stageCounter.textContent = `STAGE ${currentStageIdx + 1}/${stagesData.length}`;
-      bossEntity.className = `boss-entity boss-${currentBoss.color}`;
-      
-      bossEyes.innerHTML = "";
-      for (let i = 0; i < currentBoss.eyes; i++) {
-        const eye = document.createElement("div");
-        eye.className = "void-eye";
-        eye.style.transform = `scale(${0.6 + Math.random() * 0.6})`;
-        bossEyes.appendChild(eye);
       }
-      updateHpUI();
-      startBossMovement(1000 - currentStageIdx * 150);
-    }
 
-    function startBossMovement(speed) {
-      clearInterval(bossMoveInterval);
-      bossMoveInterval = setInterval(() => {
-        if (isBossDead) return;
-        // SMART CONSTRAINTS: Based on internal action zone, not the raw window
-        const containerRect = actionZone.getBoundingClientRect();
-        const maxW = containerRect.width;
-        const maxH = containerRect.height;
-        
-        // Prevent boss from exiting the bounds of the console
-        const safeX = maxW / 2 - 80; 
-        const safeY = maxH / 2 - 120;
-        
-        const randomX = (Math.random() * safeX * 2) - safeX;
-        const randomY = (Math.random() * safeY * 2) - safeY - 30;
-        
-        bossContainer.style.transform = `translate(calc(-50% + ${randomX}px), calc(-50% + ${randomY}px))`;
-      }, speed);
-    }
+      function initStage() {
+        isBossDead = false;
+        isEnraged = false;
+        const stage = stagesData[currentStageIdx];
+        currentHp = stage.maxHp;
+        document.getElementById("stage-counter").textContent =
+          `STAGE ${currentStageIdx + 1}/${stagesData.length}`;
+        document.getElementById("boss-title").textContent = stage.name;
+        bossEntity.className = `boss-entity boss-${stage.color}`;
+        bossHpBar.style.width = "100%";
+        kiHint.style.opacity = "0";
+        diagBox.style.opacity = "0";
+        bossWrapper.style.animationPlayState = "running";
 
-    function updateHpUI() {
-      const currentBoss = stagesData[currentStageIdx];
-      const pct = Math.max(0, (currentBoss.hp / currentBoss.maxHp) * 100);
-      bossHpBar.style.width = `${pct}%`;
-
-      if (pct <= 40 && pct > 0 && !isEnraged) {
-        isEnraged = true;
-        bossEntity.classList.add("enraged");
-        bossTitle.classList.add("text-red-500", "scale-110", "drop-shadow-[0_0_10px_rgba(255,0,0,0.8)]");
-        bossTitle.textContent = "☠️ " + currentBoss.name + " (TỬ CHIẾN)";
-        startBossMovement(280);
+        const eyesContainer = document.getElementById("boss-eyes");
+        eyesContainer.innerHTML = "";
+        for (let i = 0; i < stage.eyes; i++) {
+          const eye = document.createElement("div");
+          eye.className = "void-eye";
+          eye.style.animationDelay = `${Math.random() * 2}s`;
+          eyesContainer.appendChild(eye);
+        }
       }
-    }
 
-    function triggerGodSlash() {
-      if (isBossDead) return;
-      document.getElementById("bg-music").play().catch(() => {});
-      AudioEngine.playSlash();
+      function updateBossHp() {
+        const stage = stagesData[currentStageIdx];
+        const hpPercent = Math.max(0, (currentHp / stage.maxHp) * 100);
+        bossHpBar.style.width = `${hpPercent}%`;
 
-      const currentBoss = stagesData[currentStageIdx];
-      // Measurements strictly relative to viewport for the clone to work correctly across devices
-      const heroRect = heroPortrait.getBoundingClientRect();
-      const bossRect = bossEntity.getBoundingClientRect();
+        if (hpPercent <= 50 && !isEnraged) {
+          isEnraged = true;
+          bossEntity.classList.add("enraged");
+          kiHint.style.opacity = "1"; // Gợi ý Kamehameha
+          kiHint.textContent = "GIỮ ĐỀ CHỜ ĐẦY RỒI THẢ TAY ĐỂ BẮN KAME!";
+        }
 
-      const startX = heroRect.left + heroRect.width / 2;
-      const startY = heroRect.top + heroRect.height / 2;
-      const targetX = bossRect.left + bossRect.width / 2;
-      const targetY = bossRect.top + bossRect.height / 2;
+        if (currentHp <= 0 && !isBossDead) {
+          isBossDead = true;
+          triggerDeath();
+        }
+      }
 
-      const clone = document.createElement("img");
-      clone.src = mitHeroMover.src;
-      clone.className = "fixed rounded-full object-cover z-[999] hero-striking";
-      clone.style.width = `${heroRect.width}px`;
-      clone.style.height = `${heroRect.height}px`;
-      clone.style.left = `${startX - (heroRect.width/2)}px`;
-      clone.style.top = `${startY - (heroRect.height/2)}px`;
-      clone.style.transition = "all 0.1s cubic-bezier(0.16, 1, 0.3, 1)";
-      document.body.appendChild(clone);
+      function spawnDamageNum(dmg, isKame) {
+        const popup = document.createElement("div");
+        popup.className = `damage-popup ${isKame ? "damage-kame" : ""}`;
+        popup.textContent = dmg;
+        // Hiện popup quanh boss
+        const rect = bossEntity.getBoundingClientRect();
+        popup.style.left = `${50 + (Math.random() * 40 - 20)}%`;
+        popup.style.top = `35%`;
+        actionZone.appendChild(popup);
+        popup.addEventListener("animationend", () => popup.remove());
+      }
 
-      void clone.offsetWidth;
+      function fireKamehameha() {
+        isBeamActive = true;
+        AudioEngine.playKamehameha();
+        showTaunt("Á ĐÙÚÚÚ!!!", 1000);
+        kiHint.style.opacity = "0";
 
-      clone.style.left = `${targetX - (heroRect.width/2)}px`;
-      clone.style.top = `${targetY - (heroRect.height/2)}px`;
+        // Rung siêu mạnh
+        gameConsole.classList.add("kame-shake");
+        heroPortrait.classList.add("hero-kame");
 
-      setTimeout(() => {
-        clone.style.left = `${startX - (heroRect.width/2)}px`;
-        clone.style.top = `${startY - (heroRect.height/2)}px`;
-        clone.style.opacity = "0";
-        setTimeout(() => clone.remove(), 100);
+        const beam = document.createElement("div");
+        beam.className = "kamehameha-beam";
+        actionZone.appendChild(beam);
 
-        if (isBossDead) return;
+        setTimeout(
+          () =>
+            (bossEntity.style.filter =
+              "brightness(3) sepia(1) hue-rotate(180deg)"),
+          100,
+        );
 
-        const isCrit = Math.random() < 0.5;
-        const damage = isCrit ? Math.floor(Math.random() * 800) + 1200 : Math.floor(Math.random() * 400) + 600;
-        currentBoss.hp = Math.max(0, currentBoss.hp - damage);
-        updateHpUI();
+        // Tính Sát Thương Kame
+        const dmg = Math.floor(Math.random() * 3000) + 4000;
+        currentHp -= dmg;
+        spawnDamageNum(dmg, true);
+        updateBossHp();
 
-        // Shake the console wrapper, not the whole window
+        beam.addEventListener("animationend", () => {
+          beam.remove();
+          gameConsole.classList.remove("kame-shake");
+          heroPortrait.classList.remove("hero-kame");
+          bossEntity.style.filter = "none";
+          isBeamActive = false;
+        });
+      }
+
+      function executeNormalSlash() {
+        if (isBossDead || isBeamActive) return;
+        heroPortrait.classList.add("hero-striking");
+        setTimeout(() => heroPortrait.classList.remove("hero-striking"), 100);
+        AudioEngine.playSlash();
+
+        // Visual chém
         gameConsole.classList.remove("screen-shake");
         void gameConsole.offsetWidth;
         gameConsole.classList.add("screen-shake");
 
-        if (isCrit) {
-          flashOverlay.classList.remove("flashbang");
-          void flashOverlay.offsetWidth;
-          flashOverlay.classList.add("flashbang");
+        for (let i = 0; i < 2; i++) {
+          const line = document.createElement("div");
+          line.className = `slash-line slash-${i + 1}`;
+          actionZone.appendChild(line);
+          line.addEventListener("animationend", () => line.remove());
         }
 
-        const slashFX = document.createElement("div");
-        slashFX.className = "slash-container";
-        slashFX.style.left = `${targetX}px`;
-        slashFX.style.top = `${targetY}px`;
+        const dmg = Math.floor(Math.random() * 150) + 150;
+        currentHp -= dmg;
+        spawnDamageNum(dmg, false);
+        updateBossHp();
 
-        let sparksHTML = "";
-        for (let i = 0; i < 6; i++) {
-          const rot = Math.random() * 360;
-          const dist = Math.random() * 100 + 30;
-          sparksHTML += `<div class="spark" style="--rot:${rot}deg; --dist:${dist}px;"></div>`;
+        // Taunt System ngẫu nhiên 30%
+        if (Math.random() < 0.3 && !isBossDead) {
+          showTaunt(taunts[Math.floor(Math.random() * taunts.length)]);
         }
+      }
 
-        slashFX.innerHTML = `
-          <div class="shockwave"></div>
-          <div class="slash-line slash-1"></div>
-          <div class="slash-line slash-2"></div>
-          ${sparksHTML}
-        `;
-        document.body.appendChild(slashFX);
-        setTimeout(() => slashFX.remove(), 450);
+      function handlePointerDown(e) {
+        if (isBossDead || isBeamActive) return;
+        attackBtn.style.transform = "translateY(6px)";
+        holdStartTime = Date.now();
 
-        const popup = document.createElement("div");
-        popup.textContent = isCrit ? `CHÍ MẠNG -${damage}` : `-${damage}`;
-        popup.className = `damage-popup ${isCrit ? "damage-crit" : ""}`;
-        popup.style.left = `${targetX}px`;
-        popup.style.top = `${targetY - 50}px`;
-        document.body.appendChild(popup);
-        setTimeout(() => popup.remove(), 800);
+        holdTimer = setTimeout(() => {
+          isChargingKi = true;
+          document.getElementById("ki-charge-hud").style.opacity = "1";
+          document.getElementById("ki-charge-hud").style.transform =
+            "translateX(-50%) scale(1)";
+          heroPortrait.classList.add("hero-charging");
+          gameConsole.classList.add("charge-rumble");
+          AudioEngine.startChargeAudio();
 
-        if (currentBoss.hp <= 0) {
-          isBossDead = true;
-          clearInterval(bossMoveInterval);
-          AudioEngine.playDeath();
-          bossContainer.style.transform = "translate(-50%, -50%) scale(0.1) rotate(1080deg)";
-          bossContainer.style.filter = "brightness(5) contrast(2) blur(15px)";
-          
+          const updateCharge = () => {
+            if (!isChargingKi) return;
+            const elapsed = Date.now() - holdStartTime;
+            const progress = Math.min(
+              100,
+              (elapsed / KI_CHARGE_REQUIRED) * 100,
+            );
+            kiChargeFill.style.width = `${progress}%`;
+
+            // Nếu đầy Ki thì đổi màu nhắc nhở
+            if (progress >= 100) kiHint.textContent = "THẢ TAY RA!!!";
+
+            if (progress < 100) requestAnimationFrame(updateCharge);
+          };
+          requestAnimationFrame(updateCharge);
+        }, 150);
+      }
+
+      function handlePointerUp(e) {
+        attackBtn.style.transform = "none";
+        clearTimeout(holdTimer);
+
+        if (isChargingKi) {
+          isChargingKi = false;
+          AudioEngine.stopChargeAudio();
+          document.getElementById("ki-charge-hud").style.opacity = "0";
+          kiChargeFill.style.width = "0%";
+          heroPortrait.classList.remove("hero-charging");
+          gameConsole.classList.remove("charge-rumble");
+
+          const heldTime = Date.now() - holdStartTime;
+          if (heldTime >= KI_CHARGE_REQUIRED) {
+            fireKamehameha(); // KAMEHAMEHA EXECUTION KHI ĐẦY KI
+          }
+        } else if (Date.now() - holdStartTime < 250) {
+          executeNormalSlash();
+        }
+      }
+
+      attackBtn.addEventListener("pointerdown", handlePointerDown);
+      attackBtn.addEventListener("pointerup", handlePointerUp);
+      attackBtn.addEventListener("pointerleave", handlePointerUp);
+
+      function triggerDeath() {
+        kiHint.style.opacity = "0";
+        bossWrapper.style.animationPlayState = "paused"; // BOSS DỪNG LẠI NGAY LẬP TỨC
+        showTaunt("T CHỊU THUA...", 0, true); // HIỆN CHỮ ĐẦU HÀNG
+
+        setTimeout(() => {
+          bossEntity.style.animation = "explodeWave 0.8s forwards";
           setTimeout(() => {
-            document.getElementById("loot-title").textContent = currentBoss.lootTitle;
-            document.getElementById("loot-message").textContent = currentBoss.lootMessage;
-            rewardModal.classList.remove("hidden");
-            setTimeout(() => rewardContent.classList.remove("scale-90", "opacity-0"), 10);
-          }, 850);
-        }
-      }, 110);
-    }
+            document.getElementById("reward-modal").classList.remove("hidden");
+            document.getElementById("loot-title").textContent =
+              stagesData[currentStageIdx].lootTitle;
+            document.getElementById("loot-message").textContent =
+              stagesData[currentStageIdx].lootMessage;
+            setTimeout(
+              () =>
+                document
+                  .getElementById("reward-content")
+                  .classList.remove("scale-90", "opacity-0"),
+              50,
+            );
+          }, 800);
+        }, 1500); // Đứng hình 1.5 giây để đọc dòng chữ "T chịu thua"
+      }
 
-    document.getElementById("claim-btn").addEventListener("click", () => {
-      rewardContent.classList.add("scale-90", "opacity-0");
-      setTimeout(() => {
-        rewardModal.classList.add("hidden");
-        currentStageIdx++;
-        if (currentStageIdx < stagesData.length) {
-          bossContainer.style.transform = "translate(-50%, -50%) scale(1) rotate(0deg)";
-          bossContainer.style.filter = "none";
-          initStage();
-        } else {
-          grandFinaleScreen.classList.remove("hidden");
-          grandFinaleScreen.style.display = "block";
-          setTimeout(() => {
-            document.getElementById("final-artifact").style.opacity = "1";
-            document.getElementById("final-artifact").style.transform = "scale(1)";
-          }, 150);
-        }
-      }, 400);
-    });
-
-    attackBtn.addEventListener("pointerdown", triggerGodSlash);
-
-    // Initial boot
-    initStage();
-  </script>
-</body>
+      document.getElementById("claim-btn").addEventListener("click", () => {
+        document
+          .getElementById("reward-content")
+          .classList.add("scale-90", "opacity-0");
+        setTimeout(() => {
+          document.getElementById("reward-modal").classList.add("hidden");
+          currentStageIdx++;
+          if (currentStageIdx < stagesData.length) {
+            bossEntity.style.animation = "";
+            initStage();
+          } else {
+            const finale = document.getElementById("grand-finale-screen");
+            finale.classList.remove("hidden");
+            finale.style.display = "block";
+            setTimeout(
+              () =>
+                document
+                  .getElementById("final-artifact")
+                  .classList.remove("scale-90", "opacity-0"),
+              150,
+            );
+          }
+        }, 400);
+      });
+    </script>
+  </body>
 </html>
