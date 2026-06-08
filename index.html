@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Lets join the game before entering the final exam Mit.</title>
+    <title>Mit's Galaxy RPG: The Kamehameha Edition (Original Messages)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css?family=Dancing+Script:wght@600;700&family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cinzel+Decorative:wght@700;900&display=swap"
@@ -36,7 +36,6 @@
         width: 100vw;
       }
 
-      /* Chỉ khóa bôi đen ở khu vực chơi game, cho phép bôi đen copy thư chúc mừng */
       #game-play-area,
       #start-screen {
         user-select: none;
@@ -626,13 +625,13 @@
               -2px 2px 0px rgba(0, 229, 255, 0.6);
           "
         >
-          MIT'S road to the FINAL EXAM.
+          MIT'S glorious final exam adventure!
         </h1>
         <p
           class="text-yellow-400 font-rpg text-sm tracking-widest mb-10 text-center"
         >
-          Let's see how this powerful warrior will overcome the challenges ahead
-          and conquer the final exam with flying colors! 🚀📚
+          Let's see how this powerful warrior will conquer the exams and emerge
+          victorious with flying colors!
         </p>
         <button
           id="start-btn"
@@ -658,7 +657,7 @@
           <div class="flex flex-col">
             <span
               class="text-[10px] text-cyan-400 font-rpg tracking-[0.2em] uppercase drop-shadow-md"
-              >Tiên Nữ</span
+              >Cô nàng đỏng đảnh</span
             ><span
               class="text-base font-bold text-white font-rpg tracking-widest text-shadow-sm"
               >MITXGAI</span
@@ -671,7 +670,7 @@
             ><span
               id="stage-counter"
               class="text-base font-black text-yellow-400 font-rpg drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]"
-              >STAGE 1/4</span
+              >STAGE 1/5</span
             >
           </div>
         </div>
@@ -875,6 +874,16 @@
             "Cái môn tâm lý này mà thi hong được là cô buồn lắm à nha. Đùa chứ tui tin pà làm được mờ, mấy cái Tâm Lý Học này Mit nhai cái một à he. Fighting!!! ⚔️✨",
         },
         {
+          name: "Ma Trận Nghiên Cứu",
+          hp: 12000,
+          maxHp: 12000,
+          color: "purple",
+          eyes: 12,
+          lootTitle: "[Tri Thức] Lập Phương Dữ Liệu",
+          lootMessage:
+            "Môn này nghe nói hay hành người nhân văn lắm, nhưng mà không làm khó được pà đâu, trust me, tui tin pà trap anh này cái 1! 🔬🧬",
+        },
+        {
           name: "Vực Thẳm Kinh Tế",
           hp: 15000,
           maxHp: 15000,
@@ -887,13 +896,14 @@
       ];
 
       const taunts = [
-        "Gãi ngứa à Mit?",
-        "Yếu đuối quá!",
-        "Muỗi đốt inox!",
+        "Gãi ngựa hạ mi?",
+        "Đèo mẹ, đánh chi rựa!",
+        "Muỗi đốt inox hầy!",
         "Làm lại đi má!",
-        "Chưa đủ đô đâu!",
-        "Chỉ thế thôi sao?",
-        "Chém mỏi tay chưa?",
+        "hơi non hầy!",
+        "Em gái chịu đao quá dữ?",
+        "răng rựa, yếu rựa?",
+        "trục trạc quạ",
       ];
 
       let currentStageIdx = 0;
@@ -1191,7 +1201,12 @@
       function triggerDeath() {
         kiHint.style.opacity = "0";
         bossWrapper.style.animationPlayState = "paused"; // BOSS DỪNG LẠI NGAY LẬP TỨC
-        showTaunt("T CHỊU THUA...", 0, true); // HIỆN CHỮ ĐẦU HÀNG
+        showTaunt(
+          "Hay đọ, này tau trịu thua A+...",
+
+          0,
+          true,
+        ); // HIỆN CHỮ ĐẦU HÀNG
 
         setTimeout(() => {
           bossEntity.style.animation = "explodeWave 0.8s forwards";
